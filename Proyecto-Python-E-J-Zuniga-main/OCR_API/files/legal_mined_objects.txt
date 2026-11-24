@@ -1,0 +1,123 @@
+DENUNCIA; Denunciante; Denunciado
+CONMINATORIA; Citación Conminatoria; Conminación
+DERECHO DE DISFRUTE; Jus Fruendi; Disfrute de Derechos; Derecho de Goce
+LEY NO. 073; Ley 073; Ley 73
+LEY NO. 1257; Ley 1257; Ley N° 1257; Ley No. 1257
+CONVENIO 169; Convenio sobre Pueblos Indígenas y Tribales; Convenio de la OIT 169
+DECLARACIÓN DE NACIONES UNIDAS SOBRE DERECHOS DE PUEBLOS INDÍGENAS; Declaración de la ONU; Derechos de los Pueblos Indígenas; Declaración ONU Pueblos Indígenas
+CONSTITUCIÓN POLÍTICA DEL ESTADO; CPE; Constitución Nacional; Carta Magna
+DESLINDE JURISDICCIONAL; Deslinde; Delimitación Jurisdiccional
+HEREDEROS; Derechohabientes; Herencia
+ACCIÓN PENAL; Proceso Penal; Procedimiento Penal
+TIPOS PENALES; Tipificación Penal; Clasificación de Delitos
+ORDENAMIENTO JURÍDICO PENAL; Derecho Penal
+Código Penal; LEY N° 1768; Ley N° 1768; Ley Penal; Normas Penales
+CÓDIGO DE PROCEDIMIENTO PENAL; LEY N° 1970; Procedimiento Penal; Código Procesal Penal; Ley Procesal Penal
+LEY DEL MINISTERIO PÚBLICO; LEY N° 260; Ministerio Público; Ley del Fiscal; Norma del Ministerio Público
+LEY DEL RÉGIMEN PENITENCIARIO; LEY N° 2298; Régimen Penitenciario; Normas Penitenciarias; Ley Penitenciaria
+LEY INTEGRAL CONTRA LA VIOLENCIA HACIA LAS MUJERES; LEY N° 348; Violencia Contra la Mujer; Ley de Protección a la Mujer; L. 348
+LEY DE LUCHA CONTRA LA CORRUPCIÓN, ENRIQUECIMIENTO ILÍCITO E INVESTIGACIÓN DE FORTUNAS; LEY N° 004, LEY MARCELO QUIROGA SANTA CRUZ; Ley Marcelo Quiroga; Ley Anticorrupción; Normas Anticorrupción
+LEY CONTRA EL RACISMO Y TODA FORMA DE DISCRIMINACIÓN; LEY N° 045; Ley Contra el Racismo; Ley de No Discriminación; Normativa Antidiscriminación
+CÓDIGO CIVIL; LEY N° 12760; Código de Derecho Civil; Ley de Relaciones Civiles; Normas Civiles
+CÓDIGO DE PROCEDIMIENTO CIVIL; LEY N° 439; Procedimiento Civil; Código Procesal Civil; Ley Procesal Civil
+LEY DEL NOTARIADO PLURINACIONAL; LEY N° 483; Ley del Notariado; Notariado Plurinacional; Normativa de Notarios
+LEY DEL RÉGIMEN DE PROPIEDAD HORIZONTAL; LEY N° 843; Régimen de Propiedad Horizontal; Ley de Propiedad Compartida; Normas de Copropiedad
+LEY DE ARRENDAMIENTOS LEY N° 249; Ley de Arrendamientos; Normas de Alquileres; Ley de Alquiler
+QUERELLA; Demanda Formal; Querellante
+ACUSACIÓN PARTICULAR; Acusación; Cargos Formulados; Denuncia Particular
+CALUMNIA; Difamación; Calumniar
+DIFAMACIÓN; Injuria; Agravio; Desprestigio
+INJURIA; Deshonra; Agravio
+CONCURSO IDEAL DE DELITOS; Concurso de Delitos; Concurso Ideal; Concurso Real
+DILIGENCIAS; Actuaciones Judiciales; Procedimientos; Actuaciones Procesales
+RELACIÓN CIRCUNSTANCIADA DEL HECHO; Relato de Hechos; Hechos Circunstanciados
+ANTECEDENTES CONCOMITANCIAS; Concomitancias; Antecedentes de Hecho; Antecedentes
+CONSECUENCIAS; Resultados Legales; Efectos Jurídicos
+DERECHO AL HONOR; Protección de la Reputación; Derecho a la Dignidad
+DAÑO MORAL; Daño a la Dignidad; Perjuicio Moral
+PATRIMONIO DEL BUEN NOMBRE; Reputación; Dignidad Personal; Buen Nombre
+MEDIOS DE COMUNICACIÓN; Canales de Comunicación; Prensa; Medios de Información
+EFECTO NOCIVO; Consecuencias Perjudiciales; Efecto Adverso
+ANTICRESIS; Contrato de Anticresis; Hipoteca de Uso; Prenda Inmobiliaria
+AÑO FORZOSO; Año Obligatorio; Periodo Forzoso
+AÑO VOLUNTARIO; Periodo Opcional; Año Opcional
+EXPENSAS; Gastos; Costos; Desembolsos
+LIMITACIONES AL BUEN VIVIR; Restricciones a la Calidad de Vida; Limitación al Bienestar
+CONTRATO VOLUNTARIO; Acuerdo Voluntario; Contrato Mutuo
+DERECHOS Y DEBERES; Obligaciones Contractuales; Derechos Contractuales
+DIGNIDAD; Respeto; Honor; Dignidad Humana
+HONOR; Buen Nombre; Respeto Social; Reputación
+ANIMUS DIFAMANDI; Intención de Difamar; Voluntad de Difamar; Propósito Difamatorio
+BLOQUE DE CONSTITUCIONALIDAD; Conjunto Constitucional; Bloque Constitucional; Marco Constitucional
+TESTIGOS; Testimonio; Declarantes; Atestiguantes
+PRUEBAS; Evidencias; Elementos de Prueba; Indicios
+PROCESO PENAL; Proceso Criminal; Juicio Penal; Procedimiento Penal
+CIUDADANO; Persona; Demandante; Acusado
+TRIBUNAL; Juzgado; Corte; Instancia Judicial
+JURISDICCIÓN; Competencia Territorial; Jurisdicción Territorial; Ámbito Jurisdiccional
+PRUEBA VISUAL; Evidencia Gráfica; Prueba Fotográfica; Prueba de Video
+CONDENA; Pena; Sentencia; Fallo Condenatorio
+JURISPRUDENCIA; Precedente Judicial; Fallos Precedentes; Sentencias Anteriores
+ARTÍCULO; Art.; ART.; Artículo Jurídico
+LEY N.º; Ley Número; L. N°; LEY No.
+CONVENIO; Acuerdo; Pacto; Tratado
+CONSTITUCIÓN; Carta Magna; Constitución Nacional; CPE
+CÓDIGO; Normativa; Código de Leyes; Legislación Codificada
+DERECHO; Ley; Norma; Jurisprudencia
+DERECHOHABIENTE; Beneficiario; Heredero
+PROCESO; Juicio; Procedimiento; Proceso Judicial
+ACCIÓN; Demanda; Acto Judicial; Recurso
+TESTIGO; Atestiguante; Declarante; Testificador
+PRUEBA; Evidencia; Indicio; Elemento Probatorio
+DAÑO MORAL; Perjuicio; Afectación Psicológica; Daño No Patrimonial
+CONVOCATORIA; Citación; Llamado Formal; Notificación
+RELACIÓN CIRCUNSTANCIADA; Relato de Hechos; Relación de Hechos; Contexto Detallado
+ANTECEDENTES; Información Previa; Hechos Anteriores; Contexto Histórico
+CONSECUENCIAS; Resultados; Consecuencias Legales
+EFECTO NOCIVO; Daño Colateral; Efecto Dañino
+CONTRATO; Acuerdo; Convenio; Pacto
+EJECUTORIA; Sentencia Firme; Fallo Ejecutoriado; Resolución
+USUCAPIÓN; Posesión; Prescripción Adquisitiva; Dominio
+TESTIMONIO JUDICIAL; Acta Judicial; Declaración Oficial
+CERTIFICACIÓN JUDICIAL; Certificado Judicial; Documentación Oficial; Constancia Judicial
+DERECHOS REALES; Registro de Propiedad; Derechos Inmobiliarios; Registro Real
+PRESCRIPCIÓN ADQUISITIVA; Prescripción; Adquisición por Uso; Usucapión
+SENTENCIA; Fallo; Veredicto; Resolución Judicial
+TUTELA JURÍDICA; Protección Legal; Amparo Jurídico; Tutela
+INSCRIPCIÓN DE PROPIEDAD; Registro de Propiedad; Anotación; Inscripción Legal
+VIOLENCIA PSICOLÓGICA; Abuso Psicológico; Maltrato Psicológico; Violencia Emocional
+VIOLENCIA LABORAL; Abuso Laboral; Violencia en el Trabajo; Hostigamiento Laboral
+LEY 348; Ley contra la Violencia; L. 348; Ley Integral 348
+ARTÍCULO 6; Art. 6; A. 6; Art. VI
+ARTÍCULO 7; Art. 7; A. 7; Artículo Séptimo
+VIOLENCIA FAMILIAR; Abuso Doméstico; Violencia Intrafamiliar; Maltrato Familiar
+CERTIFICADO FORENSE; Informe Médico; Certificado Legal; Evaluación Forense
+LEY DE VIOLENCIA FAMILIAR; Ley de Protección; Normativa Familiar; Ley N° 348
+INFORME PSICOLÓGICO; Evaluación Psicológica; Informe Legal; Evaluación Mental
+MEDIDAS CAUTELARES; Restricciones; Medidas de Protección; Cautelares
+JUEZ; Magistrado; Autoridad Judicial; Juez de Instancia
+JUEZA; Magistrada; Autoridad Judicial; Jueza de Instancia
+FISCAL; Ministerio Público; Fiscal de Caso; Agente Fiscal
+POLICÍA; Agente; Policía Nacional; Fuerza Pública
+OFICIAL; Oficial de Justicia; Agente del Estado; Servidor Público
+CONSTITUCIÓN POLÍTICA; Carta Magna; Ley Fundamental; Constitución Estatal
+DESIGNACIÓN; Nombramiento; Asignación; Designación Oficial
+DILIGENCIAS PREVIAS; Procedimientos Previos; Actos de Investigación; Actuaciones Preliminares
+CERTIFICACIÓN; Constancia; Documento Oficial; Prueba Documental
+NOTIFICACIÓN; Aviso Legal; Citación; Comunicación Judicial
+ORDEN DE APREHENSIÓN; Orden de Arresto; Mandato de Detención; Aprehensión Judicial
+DILIGENCIA DE DESLINDE; Delimitación Territorial; Acto de Deslinde; Proceso de Demarcación
+DELITO; Crimen; Infracción; Hecho Punible
+JUICIO; Proceso Judicial; Litigio; Audiencia
+CAUSA; Motivo; Fundamento Jurídico; Razón Legal
+DERECHOS HUMANOS; Derechos Fundamentales; Derechos Universales; Derechos Personales
+ACTO; Acción; Hecho Jurídico; Actuación
+LEGISLACIÓN; Normativa; Conjunto de Leyes; Ordenamiento Jurídico
+INSTITUCIÓN; Organismo; Entidad; Dependencia Estatal
+COMPETENCIA; Jurisdicción; Capacidad Judicial; Competencia Legal
+AUTORIDAD; Poder; Mandato; Autoridad Legal
+PROCEDIMIENTO; Trámite; Proceso; Método Legal
+RECURSO; Apelación; Recurso Judicial; Medida Jurídica
+DECRETO; Mandato; Disposición; Decreto Ley
+EXHORTO; Solicitud; Mandato; Exhortación Jurídica
+SENTENCIA; Fallo; Resolución; Veredicto

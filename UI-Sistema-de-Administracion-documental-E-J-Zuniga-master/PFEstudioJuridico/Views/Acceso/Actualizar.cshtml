@@ -1,0 +1,108 @@
+﻿@{
+    Layout = null;
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Restablecer Contraseña | Estudio Jurídico</title>
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="~/css/sb-admin-2.css" rel="stylesheet">
+</head>
+
+<body class="bg-gradient-info">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-10 col-md-7">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-6 offset-lg-3">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Restablecer Contraseña</h1>
+                                    </div>
+                                    @if (ViewBag.Restablecido == null)
+
+                                    {
+                                        <form action="@Url.Action("Actualizar","Acceso")" method="post" class="user">
+                                            <div class="form-group">
+                                                <input type="password" class="form-control form-control-user" placeholder="Ingresar una nueva contraseña" name="clave" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="password" class="form-control form-control-user" placeholder="Confirmar contraseña" name="confirmarClave" required />
+                                            </div>
+                                            <input type="hidden" name="token" value="@ViewBag.Token" />
+                                            @if (ViewBag.Mensaje != null)
+
+                                            {
+                                                <div class="form-group">
+                                                    <div class="alert alert-danger" role="alert">
+                                                        @ViewBag.Mensaje
+                                                    </div>
+                                                </div>
+                                            }
+                                            <button type="submit" class="btn btn-primary btn-user btn-block">
+                                                Cambiar contraseña
+                                            </button>
+                                        </form>
+                                    }
+
+                                    else
+
+                                    {
+                                        <div class="alert alert-success">
+                                            <p>Su contraseña fue restablecida, ahora puede ingresar a su cuenta con su nueva clave.</p>
+                                            <a class="btn btn-success" href="@Url.Action("Login","Acceso")">Ingresar</a>
+                                        </div>
+                                    }
+                                    <hr>
+                                    <div class="text-center">
+                                        <a class="small" asp-controller="Acceso" asp-action="Login">Volver</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @* <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form.user");
+            const passwordInput = form.querySelector("input[name='clave']");
+            const confirmPasswordInput = form.querySelector("input[name='confirmarClave']");
+            const messageDiv = document.createElement("div");
+            messageDiv.className = "alert alert-danger";
+            messageDiv.style.display = "none";
+            form.insertBefore(messageDiv, form.firstChild);
+
+            form.addEventListener("submit", function (event) {
+                messageDiv.style.display = "none";
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (password.length < 8) {
+                    event.preventDefault();
+                    messageDiv.innerText = "La contraseña debe tener al menos 8 caracteres.";
+                    messageDiv.style.display = "block";
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    event.preventDefault();
+                    messageDiv.innerText = "Las contraseñas no coinciden.";
+                    messageDiv.style.display = "block";
+                }
+            });
+        });
+    </script> *@
+
+</body>

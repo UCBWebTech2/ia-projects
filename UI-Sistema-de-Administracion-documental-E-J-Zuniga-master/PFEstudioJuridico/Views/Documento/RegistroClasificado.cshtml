@@ -1,0 +1,85 @@
+﻿@using PFEstudioJuridico.Models.DTOs;
+@model List<DocumentoDTO>
+
+@{
+    ViewData["Title"] = "RegistroSemiDoc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h4 class="m-0">Registrar Documento con Clasificación</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" action="@Url.Action("RegistrarDocumento", "Documento")">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="archivo" class="font-weight-bold">Archivo <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" id="archivo" name="archivo" required>
+                            <small class="form-text text-muted">Por favor, selecciona un archivo válido.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campos ocultos para Nombre, Tipo y Habilitado -->
+                <input type="hidden" id="txtNombre" name="NombreDocumento">
+                <input type="hidden" id="txtTipo" name="TipoDocumento">
+                <input type="hidden" id="ddlHabilitado" name="Habilitado" value="true">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="selectProceso" class="font-weight-bold">Proceso <span class="text-danger">*</span></label>
+                            <select id="selectProceso" name="IdProceso" class="form-control" required>
+                                @foreach (var proceso in ViewBag.Procesos)
+                                {
+                                    <option value="@proceso.IdProceso">@proceso.NombreProceso</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save"></i> Registrar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('archivo').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const txtNombre = document.getElementById('txtNombre');
+                const txtTipo = document.getElementById('txtTipo');
+
+                const fileName = file.name;
+                const fileExtension = file.name.includes('.') ? file.name.split('.').pop().toLowerCase() : '';
+
+                // Mapear extensiones a tipos
+                const extensionMap = {
+                    'pdf': 'PDF',
+                    'docx': 'DOCX',
+                    'doc': 'DOC',
+                    'jpg': 'JPG',
+                    'jpeg': 'JPG',
+                    'png': 'PNG'
+                };
+                const tipoDocumento = extensionMap[fileExtension] || 'Otro';
+
+                // Asignar valores
+                txtNombre.value = fileName; // Nombre del archivo
+                txtTipo.value = tipoDocumento; // Tipo del archivo
+            }
+        });
+    </script>
+}

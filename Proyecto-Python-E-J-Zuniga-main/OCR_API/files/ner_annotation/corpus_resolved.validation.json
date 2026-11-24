@@ -1,0 +1,17 @@
+{
+  "file": "files\\ner_annotation\\corpus_resolved.jsonl",
+  "sentences": 36,
+  "entities": 75,
+  "labels": {
+    "PER": 31,
+    "LOC": 23,
+    "ORG": 4,
+    "ARTICULO": 3,
+    "LEY": 3,
+    "INSTITUCION": 7,
+    "INSTRUMENTO": 4
+  },
+  "issues": 0,
+  "issues_by_type": {},
+  "sample_issues": []
+}

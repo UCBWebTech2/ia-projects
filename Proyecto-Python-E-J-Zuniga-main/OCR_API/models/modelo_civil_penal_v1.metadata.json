@@ -1,0 +1,107 @@
+{
+  "created_at_utc": "2026-11-23T00:47:00.245159+00:00",
+  "python": "3.13.17",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "script": "OCR_API/scripts/entrenar_v2.py",
+  "model_output": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\models\\modelo_civil_penal_v1.joblib",
+  "pipeline": {
+    "type": "sklearn.pipeline.Pipeline",
+    "steps": [
+      "CountVectorizer",
+      "MultinomialNB"
+    ],
+    "params": {
+      "vectorizer__max_features": 10000,
+      "vectorizer__min_df": 2,
+      "vectorizer__ngram_range": [
+        1,
+        2
+      ],
+      "classifier__alpha": 0.5
+    }
+  },
+  "split": {
+    "type": "explicit_files",
+    "train": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\train_4000.csv",
+    "test": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\test_4000.csv"
+  },
+  "datasets": {
+    "train": {
+      "path": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\train_4000.csv",
+      "sha256": "7851c97c22b7f4f914e96dbfebbd527fecccb8b5a67a7298f67fe8d9580ba8cf",
+      "rows": 3200,
+      "labels": {
+        "penal": 1600,
+        "civil": 1600
+      }
+    },
+    "test": {
+      "path": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\test_4000.csv",
+      "sha256": "63c2964415b19f274b355c38f45b45d271da8a4aea64baa994a63085e3fbd183",
+      "rows": 800,
+      "labels": {
+        "penal": 400,
+        "civil": 400
+      }
+    }
+  },
+  "metrics": {
+    "accuracy": 0.96375,
+    "macro_f1": 0.9637494902272064,
+    "weighted_f1": 0.9637494902272062,
+    "labels": [
+      "civil",
+      "penal"
+    ],
+    "confusion_matrix": [
+      [
+        387,
+        13
+      ],
+      [
+        16,
+        384
+      ]
+    ],
+    "classification_report": {
+      "civil": {
+        "precision": 0.9602977667493796,
+        "recall": 0.9675,
+        "f1-score": 0.9638854296388543,
+        "support": 400.0
+      },
+      "penal": {
+        "precision": 0.9672544080604534,
+        "recall": 0.96,
+        "f1-score": 0.9636135508155583,
+        "support": 400.0
+      },
+      "accuracy": 0.96375,
+      "macro avg": {
+        "precision": 0.9637760874049165,
+        "recall": 0.96375,
+        "f1-score": 0.9637494902272064,
+        "support": 800.0
+      },
+      "weighted avg": {
+        "precision": 0.9637760874049165,
+        "recall": 0.96375,
+        "f1-score": 0.9637494902272062,
+        "support": 800.0
+      }
+    }
+  },
+  "cross_validation": null,
+  "grid_search": null,
+  "notes": [
+    "Pipeline reproducible Fase 1. No incluye corpus original de 6400 si no estß en repo.",
+    "Las mÚtricas deben compararse contra test congelado con hash."
+  ],
+  "acceptance_gate": {
+    "previous_macro_f1": null,
+    "candidate_macro_f1": 0.9637494902272064,
+    "min_delta_macro_f1": 0.0,
+    "forced": false,
+    "accepted": true
+  }
+}

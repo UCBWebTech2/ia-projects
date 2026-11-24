@@ -1,0 +1,230 @@
+@using PFEstudioJuridico.DTOs;
+@model List<CategoriaDTO>
+
+@{
+    ViewData["Title"] = "Categorias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Estilos{
+    <link rel="stylesheet" href="~/vendor/datatables/extensiones/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" href="~/vendor/datatables/extensiones/css/buttons.dataTables.min.css">
+    <style>
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .loading-overlay .d-flex { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+        .spinner-border { width: 3rem; height: 3rem; margin-bottom: 10px; }
+        .loading-text { font-size: 1.5rem; color: #007bff; }
+        .table-filters .form-control { min-width: 160px; }
+    </style>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <strong>Éxito:</strong> @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <strong>Error:</strong> @TempData["ErrorMessage"]
+    </div>
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-second-primary d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-white">Lista de Categorias</h6>
+        <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalData" onclick="nuevaCategoria()"><i class="fas fa-plus-circle"></i> Nueva Categoria</button>
+    </div>
+    <div class="card-body">
+        <div class="row table-filters mb-3">
+            <div class="col-md-4 mb-2">
+                <label class="small font-weight-bold mb-1" for="filtroEstadoCat">Filtrar por estado</label>
+                <select id="filtroEstadoCat" class="form-control form-control-sm">
+                    <option value="">Todos</option>
+                    <option value="Activo">Activo</option>
+                    <option value="No Activo">No Activo</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-2 d-flex align-items-end">
+                <button type="button" id="btnLimpiarFiltrosCat" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-eraser"></i> Limpiar filtros
+                </button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="tbdata" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Creado por</th>
+                        <th>Habilitado</th>
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <th>Acciones</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var categoria in Model)
+                        {
+                            <tr>
+                                <td>@categoria.IdCategoria</td>
+                                <td>@categoria.NombreCategoria</td>
+                                <td>@categoria.DescripcionCategoria</td>
+                                <td>@categoria.NombreUsuario</td>
+                                <td>
+                                    @if (categoria.Habilitado)
+                                    {
+                                        <span class="badge badge-info">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger">No Activo</span>
+                                    }
+                                </td>
+                                @if (User.IsInRole("Administrador"))
+                                {
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalData" onclick="editarCategoria(@categoria.IdCategoria, '@categoria.NombreCategoria', '@categoria.DescripcionCategoria', @categoria.Habilitado.ToString().ToLower())">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <a class="btn btn-warning btn-sm" href="@Url.Action("CambiarEstado", "Categoria", new { id = categoria.IdCategoria })">
+                                            <i class="fas fa-exchange-alt"></i>
+                                        </a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="@(User.IsInRole("Administrador") ? 6 : 5)">No hay categorías disponibles.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Modal-->
+<div class="modal fade" id="modalData" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6>Detalle Categoria</h6>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="categoriaForm" action="/Categoria/Crear" method="post">
+                    <input type="hidden" id="txtId" name="IdCategoria" value="0">
+                    <input type="hidden" value="0" id="txtId" name="IdUsuario">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-row">
+                                <div class="form-group col-sm-12">
+                                    <label for="txtNombre">Nombre de la Categoría</label>
+                                    <input type="text" class="form-control form-control-sm" id="txtNombre" name="NombreCategoria" required>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="txtDescripcion">Descripcion</label>
+                                    <input type="text" class="form-control form-control-sm" id="txtDescripcion" name="DescripcionCategoria" required>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="selectHabilitado">Estado</label>
+                                    <select class="form-control form-control-sm" id="selectHabilitado" name="Habilitado" required>
+                                        <option value="true">Activo</option>
+                                        <option value="false">No Activo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+                        <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="d-flex">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="loading-text">Cargando...</p>
+    </div>
+</div>
+
+@{
+    var tieneSuccessMessage = TempData.ContainsKey("SuccessMessage").ToString().ToLowerInvariant();
+}
+<div id="tempDataFlagsCategoria" data-success-message="@tieneSuccessMessage"></div>
+
+@section scripts{
+    <script src="~/vendor/datatables/extensiones/js/dataTables.responsive.min.js"></script>
+    <script>
+        function editarCategoria(id, nombre, descripcion, habilitado) {
+            $('#txtId').val(id);
+            $('#txtNombre').val(nombre);
+            $('#txtDescripcion').val(descripcion);
+            $('#selectHabilitado').val(habilitado.toString()).change();
+            $('#categoriaForm').attr('action', '/Categoria/Editar');
+            $('#categoriaForm').attr('method', 'post');
+        }
+
+        function nuevaCategoria() {
+            $('#txtId').val(0);
+            $('#txtNombre').val("");
+            $('#txtDescripcion').val("");
+            $('#selectHabilitado').val("false").change();
+            $('#categoriaForm').attr('action', '/Categoria/Crear');
+            $('#categoriaForm').attr('method', 'post');
+        }
+
+        $(document).ready(function () {
+            const flagsCategoria = document.getElementById("tempDataFlagsCategoria");
+            const tieneSuccessMessage = flagsCategoria?.dataset.successMessage === "true";
+            if (tieneSuccessMessage) {
+                setTimeout(function () { $(".alert-success").fadeOut("slow"); }, 5000);
+            }
+
+            var table = $('#tbdata').DataTable({
+                paging: true,
+                lengthMenu: [10, 25, 50, 75, 100],
+                pageLength: 10,
+                responsive: true,
+                order: [[0, 'desc']],
+                language: {
+                    search: "Buscar:",
+                    lengthMenu: "Mostrar _MENU_ registros por página",
+                    zeroRecords: "No se encontraron registros",
+                    info: "Mostrando página _PAGE_ de _PAGES_",
+                    infoEmpty: "No hay registros disponibles",
+                    infoFiltered: "(filtrado de _MAX_ registros totales)",
+                    paginate: { first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior" }
+                }
+            });
+
+            var estadoCol = table.column('Habilitado:name').index();
+            if (estadoCol === undefined || estadoCol === -1) { estadoCol = 4; }
+            $('#filtroEstadoCat').on('change', function () { table.column(estadoCol).search(this.value).draw(); });
+            $('#btnLimpiarFiltrosCat').on('click', function () { $('#filtroEstadoCat').val(''); table.columns().search('').draw(); });
+
+            $("#categoriaForm").on("submit", function () { $("#loadingOverlay").show(); });
+        });
+    </script>
+}

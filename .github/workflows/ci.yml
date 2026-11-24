@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  python-checks:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Proyecto-Python-E-J-Zuniga-main
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install minimal deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pandas scikit-learn joblib fastapi httpx
+      - name: Compile scripts
+        run: |
+          python -m py_compile OCR_API/scripts/entrenar_v2.py OCR_API/scripts/auditar_datasets.py OCR_API/scripts/validar_corpus_ner.py OCR_API/scripts/evaluar_ner.py
+      - name: Run lightweight tests
+        run: |
+          pytest OCR_API/tests/test_fase1_regresion.py -q
+
+  dotnet-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build API
+        run: dotnet build APIsistema-administracion-documental-ej-zuniga-main/SendEmail/APIsEstudioJuridico.csproj -c Release
+
+  dotnet-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build UI
+        run: dotnet build UI-Sistema-de-Administracion-documental-E-J-Zuniga-master/PFEstudioJuridico/PFEstudioJuridico.csproj -c Release

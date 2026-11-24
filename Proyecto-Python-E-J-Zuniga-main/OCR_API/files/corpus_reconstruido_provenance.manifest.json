@@ -1,0 +1,51 @@
+{
+  "generated": "phase3-provenance",
+  "total_unique_rows": 5767,
+  "label_counts": {
+    "penal": 3051,
+    "civil": 2716
+  },
+  "sources": [
+    {
+      "file": "train_4000.csv",
+      "exists": true,
+      "rows": 3200,
+      "added_unique": 3200,
+      "duplicates": 0,
+      "invalid": 0
+    },
+    {
+      "file": "test_4000.csv",
+      "exists": true,
+      "rows": 800,
+      "added_unique": 800,
+      "duplicates": 0,
+      "invalid": 0
+    },
+    {
+      "file": "test_dataset.csv",
+      "exists": true,
+      "rows": 200,
+      "added_unique": 42,
+      "duplicates": 158,
+      "invalid": 0
+    },
+    {
+      "file": "dataset_derecho.csv",
+      "exists": true,
+      "rows": 3018,
+      "added_unique": 1725,
+      "duplicates": 1292,
+      "invalid": 1
+    },
+    {
+      "file": "dataset_derecho_4k.csv",
+      "exists": true,
+      "rows": 4000,
+      "added_unique": 0,
+      "duplicates": 4000,
+      "invalid": 0
+    }
+  ],
+  "warning": "No es el corpus original de 6400 muestras del modelo de producción; es una reconstrucción trazable desde archivos disponibles."
+}

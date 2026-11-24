@@ -1,0 +1,231 @@
+﻿@using PFEstudioJuridico.DTOs;
+@model List<ProcesoDTO>
+@{
+    ViewData["Title"] = "Procesos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Estilos {
+    <link rel="stylesheet" href="~/vendor/datatables/extensiones/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" href="~/vendor/datatables/extensiones/css/buttons.dataTables.min.css">
+    <style>
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .loading-overlay .d-flex { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+        .spinner-border { width: 3rem; height: 3rem; margin-bottom: 10px; }
+        .loading-text { font-size: 1.5rem; color: #007bff; }
+        .table-filters .form-control { min-width: 160px; }
+    </style>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <strong>Éxito:</strong> @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <strong>Error:</strong> @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-second-primary d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-white">Lista de Procesos</h6>
+        <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalData" onclick="nuevoProceso()">
+            <i class="fas fa-plus-circle"></i> Nuevo Proceso
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="row table-filters mb-3">
+            <div class="col-md-4 mb-2">
+                <label class="small font-weight-bold mb-1" for="filtroEstadoProc">Filtrar por estado</label>
+                <select id="filtroEstadoProc" class="form-control form-control-sm">
+                    <option value="">Todos</option>
+                    <option value="Activo">Activo</option>
+                    <option value="No Activo">No Activo</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-2 d-flex align-items-end">
+                <button type="button" id="btnLimpiarFiltrosProc" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-eraser"></i> Limpiar filtros
+                </button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="tbdata" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Usuario</th>
+                        <th>Habilitado</th>
+                        <th>Documentos Relacionados</th>
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <th>Acciones</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var proceso in Model)
+                        {
+                            <tr>
+                                <td>@proceso.IdProceso</td>
+                                <td>@proceso.NombreProceso</td>
+                                <td>@proceso.DescripcionProceso</td>
+                                <td>@proceso.NombreUsuario</td>
+                                <td>
+                                    @if (proceso.Habilitado)
+                                    {
+                                        <span class="badge badge-info">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger">No Activo</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("HistorialProcesos", "Proceso", new { idProceso = proceso.IdProceso })">
+                                        Documentos relacionados
+                                    </a>
+                                </td>
+                                @if (User.IsInRole("Administrador"))
+                                {
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalData" onclick='editarProceso(@proceso.IdProceso, @Json.Serialize(proceso.NombreProceso), @Json.Serialize(proceso.DescripcionProceso), @Json.Serialize(proceso.Habilitado))'>
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <a class="btn btn-danger btn-sm" href="@Url.Action("CambiarEstado", "Proceso", new { id = proceso.IdProceso })">
+                                            <i class="fas fa-exchange-alt"></i>
+                                        </a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="@(User.IsInRole("Administrador") ? 7 : 6)">No hay procesos disponibles.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Crear/Editar Proceso -->
+<div class="modal fade" id="modalData" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6>Detalle Proceso</h6>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="procesoForm" action="/Proceso/Crear" method="post">
+                    <input type="hidden" id="txtId" name="IdProceso" value="0">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-row">
+                                <div class="form-group col-sm-12">
+                                    <label for="txtNombre">Nombre del Proceso</label>
+                                    <input type="text" class="form-control form-control-sm" id="txtNombre" name="NombreProceso" required>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="txtDescripcion">Descripción</label>
+                                    <input type="text" class="form-control form-control-sm" id="txtDescripcion" name="DescripcionProceso" required>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="ddlHabilitado">Habilitado</label>
+                                    <select class="form-control form-control-sm" id="ddlHabilitado" name="Habilitado" required>
+                                        <option value="true">Habilitado</option>
+                                        <option value="false">No habilitado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+                        <button class="btn btn-danger btn-sm" type="button" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="d-flex">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="loading-text">Cargando...</p>
+    </div>
+</div>
+@{
+    var tieneSuccessMessage = TempData.ContainsKey("SuccessMessage").ToString().ToLowerInvariant();
+}
+<div id="tempDataFlagsProceso" data-success-message="@tieneSuccessMessage" hidden></div>
+
+@section scripts {
+    <script src="~/vendor/datatables/extensiones/js/dataTables.responsive.min.js"></script>
+    <script>
+        function editarProceso(id, nombre, descripcion, habilitado) {
+            $('#txtId').val(id);
+            $('#txtNombre').val(nombre);
+            $('#txtDescripcion').val(descripcion);
+            $('#ddlHabilitado').val(habilitado.toString()).change();
+            $('#procesoForm').attr('action', '/Proceso/Editar');
+            $('#procesoForm').attr('method', 'post');
+        }
+
+        function nuevoProceso() {
+            $('#txtId').val(0);
+            $('#txtNombre').val("");
+            $('#txtDescripcion').val("");
+            $('#ddlHabilitado').val("false").change();
+            $('#procesoForm').attr('action', '/Proceso/Crear');
+            $('#procesoForm').attr('method', 'post');
+        }
+
+        $(document).ready(function () {
+            const tieneSuccessMessage = $("#tempDataFlagsProceso").attr("data-success-message") === "true";
+            if (tieneSuccessMessage) {
+                setTimeout(function () { $(".alert-success").fadeOut("slow"); }, 5000);
+            }
+
+            var table = $('#tbdata').DataTable({
+                paging: true,
+                lengthMenu: [10, 25, 50, 75, 100],
+                pageLength: 10,
+                responsive: true,
+                order: [[0, 'desc']],
+                language: {
+                    search: "Buscar:",
+                    lengthMenu: "Mostrar _MENU_ registros por página",
+                    zeroRecords: "No se encontraron registros",
+                    info: "Mostrando página _PAGE_ de _PAGES_",
+                    infoEmpty: "No hay registros disponibles",
+                    infoFiltered: "(filtrado de _MAX_ registros totales)",
+                    paginate: { first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior" }
+                }
+            });
+
+            $('#filtroEstadoProc').on('change', function () { table.column(4).search(this.value).draw(); });
+            $('#btnLimpiarFiltrosProc').on('click', function () { $('#filtroEstadoProc').val(''); table.columns().search('').draw(); });
+
+            $("#procesoForm").on("submit", function () { $("#loadingOverlay").show(); });
+        });
+    </script>
+}

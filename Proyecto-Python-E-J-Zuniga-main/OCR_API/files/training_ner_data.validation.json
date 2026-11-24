@@ -1,0 +1,420 @@
+{
+  "file": "OCR_API\\files\\training_ner_data.py",
+  "sentences": 31,
+  "entities": 59,
+  "labels": {
+    "PER": 16,
+    "LOC": 20,
+    "ORG": 6,
+    "ARTICULO": 1,
+    "LEY": 1,
+    "PERSON": 15
+  },
+  "issues": 50,
+  "issues_by_type": {
+    "misaligned": 40,
+    "out_of_range": 10
+  },
+  "sample_issues": [
+    {
+      "index": 0,
+      "start": 13,
+      "end": 24,
+      "label": "PER",
+      "span": "ría Pérez p",
+      "issue": "misaligned"
+    },
+    {
+      "index": 0,
+      "start": 48,
+      "end": 54,
+      "label": "LOC",
+      "span": " Paz c",
+      "issue": "misaligned"
+    },
+    {
+      "index": 0,
+      "start": 65,
+      "end": 73,
+      "label": "ORG",
+      "span": "presa XY",
+      "issue": "misaligned"
+    },
+    {
+      "index": 1,
+      "start": 3,
+      "end": 13,
+      "label": "ARTICULO",
+      "span": "artículo 3",
+      "issue": "misaligned"
+    },
+    {
+      "index": 1,
+      "start": 21,
+      "end": 30,
+      "label": "LEY",
+      "span": "Ley 1970 ",
+      "issue": "misaligned"
+    },
+    {
+      "index": 2,
+      "start": 13,
+      "end": 25,
+      "label": "LOC",
+      "span": "e Cochabamba",
+      "issue": "misaligned"
+    },
+    {
+      "index": 2,
+      "start": 53,
+      "end": 83,
+      "label": "ORG",
+      "span": null,
+      "issue": "out_of_range"
+    },
+    {
+      "index": 3,
+      "start": 0,
+      "end": 38,
+      "label": "ORG",
+      "span": "EMBOTELLADORAS BOLIVIANAS UNIDAS S.A. ",
+      "issue": "misaligned"
+    },
+    {
+      "index": 3,
+      "start": 46,
+      "end": 78,
+      "label": "PERSON",
+      "span": ". Oriana Marioly Hoyos Balbontin",
+      "issue": "misaligned"
+    },
+    {
+      "index": 4,
+      "start": 7,
+      "end": 29,
+      "label": "PERSON",
+      "span": "Orlando Piro Borquez c",
+      "issue": "misaligned"
+    },
+    {
+      "index": 5,
+      "start": 12,
+      "end": 50,
+      "label": "ORG",
+      "span": "MBOTELLADORAS BOLIVIANAS UNIDAS S.A. t",
+      "issue": "misaligned"
+    },
+    {
+      "index": 5,
+      "start": 72,
+      "end": 96,
+      "label": "LOC",
+      "span": " Santa Cruz de la Sierra",
+      "issue": "misaligned"
+    },
+    {
+      "index": 6,
+      "start": 8,
+      "end": 40,
+      "label": "PERSON",
+      "span": "Oriana Marioly Hoyos Balbontin c",
+      "issue": "misaligned"
+    },
+    {
+      "index": 7,
+      "start": 31,
+      "end": 55,
+      "label": "LOC",
+      "span": "iudad de Santa Cruz de l",
+      "issue": "misaligned"
+    },
+    {
+      "index": 8,
+      "start": 14,
+      "end": 33,
+      "label": "PERSON",
+      "span": "rlando Piro Bórquez",
+      "issue": "misaligned"
+    },
+    {
+      "index": 9,
+      "start": 0,
+      "end": 28,
+      "label": "PERSON",
+      "span": "Luis Enrique Gil Landivar fi",
+      "issue": "misaligned"
+    },
+    {
+      "index": 10,
+      "start": 22,
+      "end": 39,
+      "label": "PERSON",
+      "span": "LDO CHAMBI SILVA ",
+      "issue": "misaligned"
+    },
+    {
+      "index": 10,
+      "start": 42,
+      "end": 63,
+      "label": "PERSON",
+      "span": "OSAURA SEVILLANOS NN…",
+      "issue": "misaligned"
+    },
+    {
+      "index": 10,
+      "start": 115,
+      "end": 133,
+      "label": "LOC",
+      "span": " domiciliados en e",
+      "issue": "misaligned"
+    },
+    {
+      "index": 10,
+      "start": 136,
+      "end": 154,
+      "label": "LOC",
+      "span": "unicipio de Apolo,",
+      "issue": "misaligned"
+    },
+    {
+      "index": 10,
+      "start": 162,
+      "end": 180,
+      "label": "LOC",
+      "span": " Sección de la Pro",
+      "issue": "misaligned"
+    },
+    {
+      "index": 11,
+      "start": 33,
+      "end": 51,
+      "label": "PERSON",
+      "span": "NISIO GUTIERREZ, p",
+      "issue": "misaligned"
+    },
+    {
+      "index": 11,
+      "start": 92,
+      "end": 116,
+      "label": "PERSON",
+      "span": "go del entonces Fiscal D",
+      "issue": "misaligned"
+    },
+    {
+      "index": 12,
+      "start": 93,
+      "end": 117,
+      "label": "PERSON",
+      "span": "Rocabado Reynal con RPA1",
+      "issue": "misaligned"
+    },
+    {
+      "index": 12,
+      "start": 123,
+      "end": 139,
+      "label": "ORG",
+      "span": null,
+      "issue": "out_of_range"
+    },
+    {
+      "index": 13,
+      "start": 6,
+      "end": 24,
+      "label": "LOC",
+      "span": "Miguel de Urrea Es",
+      "issue": "misaligned"
+    },
+    {
+      "index": 13,
+      "start": 30,
+      "end": 43,
+      "label": "LOC",
+      "span": "le Florida de",
+      "issue": "misaligned"
+    },
+    {
+      "index": 13,
+      "start": 49,
+      "end": 67,
+      "label": "LOC",
+      "span": "io Iltasagua, Muni",
+      "issue": "misaligned"
+    },
+    {
+      "index": 13,
+      "start": 70,
+      "end": 86,
+      "label": "LOC",
+      "span": "io de Apolo, Pro",
+      "issue": "misaligned"
+    },
+    {
+      "index": 13,
+      "start": 89,
+      "end": 107,
+      "label": "LOC",
+      "span": "Franz Tamayo del D",
+      "issue": "misaligned"
+    },
+    {
+      "index": 13,
+      "start": 112,
+      "end": 130,
+      "label": "LOC",
+      "span": null,
+      "issue": "out_of_range"
+    },
+    {
+      "index": 14,
+      "start": 45,
+      "end": 71,
+      "label": "PERSON",
+      "span": null,
+      "issue": "out_of_range"
+    },
+    {
+      "index": 15,
+      "start": 44,
+      "end": 72,
+      "label": "PERSON",
+      "span": null,
+      "issue": "out_of_range"
+    },
+    {
+      "index": 16,
+      "start": 30,
+      "end": 52,
+      "label": "PERSON",
+      "span": "rtha Sánchez Zarate), ",
+      "issue": "misaligned"
+    },
+    {
+      "index": 17,
+      "start": 46,
+      "end": 69,
+      "label": "LOC",
+      "span": "CRITO A APOLO PROV. FRA",
+      "issue": "misaligned"
+    },
+    {
+      "index": 17,
+      "start": 72,
+      "end": 102,
+      "label": "PER",
+      "span": "TAMAYO (Dr. Limbert M. Orozco ",
+      "issue": "misaligned"
+    },
+    {
+      "index": 18,
+      "start": 26,
+      "end": 58,
+      "label": "PER",
+      "span": null,
+      "issue": "out_of_range"
+    },
+    {
+      "index": 19,
+      "start": 23,
+      "end": 51,
+      "label": "PER",
+      "span": "ilca Lea Sarmiento Carrión, ",
+      "issue": "misaligned"
+    },
+    {
+      "index": 19,
+      "start": 53,
+      "end": 74,
+      "label": "PER",
+      "span": "lson Oblitas Quispe y",
+      "issue": "misaligned"
+    },
+    {
+      "index": 21,
+      "start": 0,
+      "end": 25,
+      "label": "PER",
+      "span": null,
+      "issue": "out_of_range"
+    },
+    {
+      "index": 23,
+      "start": 27,
+      "end": 32,
+      "label": "LOC",
+      "span": "lo a ",
+      "issue": "misaligned"
+    },
+    {
+      "index": 23,
+      "start": 48,
+      "end": 74,
+      "label": "PER",
+      "span": "ra Claudia M. Gariazu Gáme",
+      "issue": "misaligned"
+    },
+    {
+      "index": 24,
+      "start": 0,
+      "end": 25,
+      "label": "PER",
+      "span": null,
+      "issue": "out_of_range"
+    },
+    {
+      "index": 25,
+      "start": 0,
+      "end": 27,
+      "label": "LOC",
+      "span": null,
+      "issue": "out_of_range"
+    },
+    {
+      "index": 27,
+      "start": 0,
+      "end": 22,
+      "label": "PER",
+      "span": null,
+      "issue": "out_of_range"
+    },
+    {
+      "index": 28,
+      "start": 0,
+      "end": 21,
+      "label": "PER",
+      "span": "Zenón Flores Mamani c",
+      "issue": "misaligned"
+    },
+    {
+      "index": 28,
+      "start": 67,
+      "end": 91,
+      "label": "LOC",
+      "span": "unidad Yalihuara de Apol",
+      "issue": "misaligned"
+    },
+    {
+      "index": 29,
+      "start": 69,
+      "end": 75,
+      "label": "LOC",
+      "span": "ocalid",
+      "issue": "misaligned"
+    },
+    {
+      "index": 30,
+      "start": 0,
+      "end": 33,
+      "label": "PER",
+      "span": "Zenón Benedicto Aguirre Avelino, ",
+      "issue": "misaligned"
+    },
+    {
+      "index": 30,
+      "start": 73,
+      "end": 100,
+      "label": "LOC",
+      "span": " en el Barrio Iltasagua de ",
+      "issue": "misaligned"
+    }
+  ]
+}

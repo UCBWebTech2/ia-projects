@@ -1,0 +1,15 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/*.user
+**/*.suo
+**/TestResults/
+.git/
+.gitignore
+Dockerfile
+*.md
+secrets/
+DocumentosSistema/
+SendEmail/secrets/*.pem
+SendEmail/secrets/*.key

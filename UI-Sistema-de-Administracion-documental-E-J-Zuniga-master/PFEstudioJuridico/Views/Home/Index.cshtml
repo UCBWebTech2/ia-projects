@@ -1,0 +1,159 @@
+﻿@using PFEstudioJuridico.Models.DTOs
+@{
+    ViewBag.Title = "Inicio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var totalDocumentos = ViewData["TotalDocumentos"] as int? ?? 0;
+    var totalProcesos = ViewData["TotalProcesos"] as int? ?? 0;
+    var totalUsuarios = ViewData["TotalUsuarios"] as int? ?? 0;
+    var totalCategorias = ViewData["TotalCategorias"] as int? ?? 0;
+    var recientes = ViewData["DocumentosRecientes"] as List<DocumentoDTO> ?? new List<DocumentoDTO>();
+    var nombre = User.Claims.FirstOrDefault(c => c.Type == "NombreUsuario")?.Value ?? "Usuario";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h1 class="h3 mb-1 text-gray-800">Panel del Despacho</h1>
+        <p class="text-muted mb-0">Bienvenido, @nombre. Gestione documentos, procesos y usuarios desde un solo lugar.</p>
+    </div>
+    <a href="@Url.Action("Index","Documento")" class="d-none d-sm-inline-block btn btn-primary shadow-sm">
+        <i class="fas fa-folder-open fa-sm text-white-50 mr-1"></i> Ver documentos
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Documentos</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@totalDocumentos</div>
+                        <div class="text-muted small mt-1">Registrados en el sistema</div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-file-alt fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Procesos judiciales</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@totalProcesos</div>
+                        <div class="text-muted small mt-1">Casos en seguimiento</div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-gavel fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Categorías</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@totalCategorias</div>
+                        <div class="text-muted small mt-1">Clasificación documental</div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-layer-group fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Usuarios</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@totalUsuarios</div>
+                        <div class="text-muted small mt-1">Equipo del despacho</div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-users fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center bg-white">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-clock mr-2"></i>Documentos recientes</h6>
+                <a href="@Url.Action("Index","Documento")" class="btn btn-sm btn-outline-primary">Ver todos</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Documento</th>
+                                <th>Tipo</th>
+                                <th>Categoría</th>
+                                <th>Proceso</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @if (recientes.Any())
+                        {
+                            foreach (var d in recientes)
+                            {
+                                <tr>
+                                    <td class="font-weight-bold">@d.NombreDocumento</td>
+                                    <td><span class="badge badge-info">@d.TipoDocumento</span></td>
+                                    <td>@d.NombreCategoria</td>
+                                    <td>@d.NombreProceso</td>
+                                    <td>@(d.FechaCreacion?.ToString("dd/MM/yyyy") ?? "-")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="5" class="text-center text-muted py-4">No hay documentos registrados.</td></tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-white">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-bolt mr-2"></i>Acciones rápidas</h6>
+            </div>
+            <div class="card-body">
+                <a href="@Url.Action("Index","Documento")" class="btn btn-primary btn-block mb-2 text-left"><i class="fas fa-file-upload mr-2"></i>Gestionar documentos</a>
+                <a href="@Url.Action("BusquedaAvanzada","Documento")" class="btn btn-outline-primary btn-block mb-2 text-left"><i class="fas fa-search mr-2"></i>Búsqueda avanzada</a>
+                <a href="@Url.Action("Index","Proceso")" class="btn btn-outline-primary btn-block mb-2 text-left"><i class="fas fa-gavel mr-2"></i>Procesos judiciales</a>
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a href="@Url.Action("Index","Usuario")" class="btn btn-outline-primary btn-block mb-2 text-left"><i class="fas fa-users-cog mr-2"></i>Usuarios</a>
+                    <a href="@Url.Action("Index","Categoria")" class="btn btn-outline-primary btn-block mb-2 text-left"><i class="fas fa-layer-group mr-2"></i>Categorías</a>
+                    <a href="@Url.Action("Index","Auditoria")" class="btn btn-outline-primary btn-block text-left"><i class="fas fa-clipboard-check mr-2"></i>Auditoría</a>
+                }
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-white">
+                <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-balance-scale mr-2"></i>Estudio Jurídico Zúñiga</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-2">Sistema de administración documental para la gestión segura de expedientes civiles y penales.</p>
+                <ul class="list-unstyled mb-0 text-muted small">
+                    <li class="mb-2"><i class="fas fa-check text-success mr-2"></i>Control de documentos y versiones</li>
+                    <li class="mb-2"><i class="fas fa-check text-success mr-2"></i>Seguimiento de procesos judiciales</li>
+                    <li class="mb-2"><i class="fas fa-check text-success mr-2"></i>Búsqueda y clasificación documental</li>
+                    <li><i class="fas fa-check text-success mr-2"></i>Auditoría y control de acceso</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

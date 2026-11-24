@@ -1,0 +1,307 @@
+﻿@using System.Text.Json
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    JsonElement? root = ViewBag.ModelMetrics is JsonElement je ? je : (JsonElement?)null;
+    JsonElement? metrics = null;
+    JsonElement? report = null;
+    if (root.HasValue && root.Value.TryGetProperty("metrics", out var m) && m.ValueKind == JsonValueKind.Object)
+    {
+        metrics = m;
+        if (m.TryGetProperty("classification_report", out var r) && r.ValueKind == JsonValueKind.Object)
+            report = r;
+    }
+
+    string modelPath = root.HasValue && root.Value.TryGetProperty("model_path", out var mp) ? mp.ToString() : "N/D";
+    string createdAt = root.HasValue && root.Value.TryGetProperty("created_at_utc", out var ca) ? ca.ToString() : "N/D";
+    bool available = root.HasValue && root.Value.TryGetProperty("available", out var av) && av.ValueKind == JsonValueKind.True;
+    bool metadataFound = root.HasValue && root.Value.TryGetProperty("metadata_found", out var mf) && mf.ValueKind == JsonValueKind.True;
+
+    double? accuracy = metrics.HasValue && metrics.Value.TryGetProperty("accuracy", out var acc) && acc.ValueKind == JsonValueKind.Number ? acc.GetDouble() : (double?)null;
+    double? macroF1 = metrics.HasValue && metrics.Value.TryGetProperty("macro_f1", out var mf1) && mf1.ValueKind == JsonValueKind.Number ? mf1.GetDouble() : (double?)null;
+    double? weightedF1 = metrics.HasValue && metrics.Value.TryGetProperty("weighted_f1", out var wf1) && wf1.ValueKind == JsonValueKind.Number ? wf1.GetDouble() : (double?)null;
+
+    string Fmt(double? v) => v.HasValue ? (v.Value * 100.0).ToString("0.00") + "%" : "N/D";
+    string FmtRaw(double? v) => v.HasValue ? v.Value.ToString("0.0000") : "N/D";
+
+    var labels = new List<string>();
+    var f1s = new List<double>();
+    var precisions = new List<double>();
+    var recalls = new List<double>();
+    if (report.HasValue)
+    {
+        foreach (var prop in report.Value.EnumerateObject())
+        {
+            if (prop.Name == "accuracy" || prop.Name == "macro avg" || prop.Name == "weighted avg") continue;
+            if (prop.Value.ValueKind != JsonValueKind.Object) continue;
+            labels.Add(prop.Name);
+            precisions.Add(prop.Value.TryGetProperty("precision", out var p) && p.ValueKind == JsonValueKind.Number ? p.GetDouble() : 0);
+            recalls.Add(prop.Value.TryGetProperty("recall", out var rc) && rc.ValueKind == JsonValueKind.Number ? rc.GetDouble() : 0);
+            f1s.Add(prop.Value.TryGetProperty("f1-score", out var f) && f.ValueKind == JsonValueKind.Number ? f.GetDouble() : 0);
+        }
+    }
+
+    var cm = new List<List<int>>();
+    if (metrics.HasValue && metrics.Value.TryGetProperty("confusion_matrix", out var cmEl) && cmEl.ValueKind == JsonValueKind.Array)
+    {
+        foreach (var row in cmEl.EnumerateArray())
+        {
+            var rrow = new List<int>();
+            if (row.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var cell in row.EnumerateArray())
+                    rrow.Add(cell.ValueKind == JsonValueKind.Number ? cell.GetInt32() : 0);
+            }
+            cm.Add(rrow);
+        }
+    }
+    var cmLabels = new List<string>();
+    if (metrics.HasValue && metrics.Value.TryGetProperty("labels", out var lEl) && lEl.ValueKind == JsonValueKind.Array)
+    {
+        foreach (var l in lEl.EnumerateArray()) cmLabels.Add(l.ToString());
+    }
+
+    JsonElement? dash = ViewBag.DashboardResumen is JsonElement dje ? dje : (JsonElement?)null;
+    int GetInt(JsonElement? el, string name) => el.HasValue && el.Value.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetInt32() : 0;
+    double GetDbl(JsonElement? el, string name) => el.HasValue && el.Value.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.Number ? v.GetDouble() : 0;
+    var catLabels = new List<string>(); var catVals = new List<int>();
+    var usrLabels = new List<string>(); var usrVals = new List<int>();
+    var mesLabels = new List<string>(); var mesVals = new List<int>();
+    var busMesLabels = new List<string>(); var busMesVals = new List<int>();
+    if (dash.HasValue)
+    {
+        if (dash.Value.TryGetProperty("documentosPorCategoria", out var dc) && dc.ValueKind == JsonValueKind.Array)
+            foreach (var it in dc.EnumerateArray()) { catLabels.Add(it.GetProperty("label").ToString()); catVals.Add(it.GetProperty("valor").GetInt32()); }
+        if (dash.Value.TryGetProperty("documentosPorUsuario", out var du) && du.ValueKind == JsonValueKind.Array)
+            foreach (var it in du.EnumerateArray()) { usrLabels.Add(it.GetProperty("label").ToString()); usrVals.Add(it.GetProperty("valor").GetInt32()); }
+        if (dash.Value.TryGetProperty("documentosPorMes", out var dm) && dm.ValueKind == JsonValueKind.Array)
+            foreach (var it in dm.EnumerateArray()) { mesLabels.Add(it.GetProperty("mes").ToString()); mesVals.Add(it.GetProperty("valor").GetInt32()); }
+        if (dash.Value.TryGetProperty("busquedasPorMes", out var bm) && bm.ValueKind == JsonValueKind.Array)
+            foreach (var it in bm.EnumerateArray()) { busMesLabels.Add(it.GetProperty("mes").ToString()); busMesVals.Add(it.GetProperty("valor").GetInt32()); }
+    }
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Dashboard - Indicadores del Sistema</h1>
+    <span class="badge @(available ? "badge-success" : "badge-danger") p-2">Modelo NB: @(available ? "Disponible" : "No disponible")</span>
+</div>
+
+@if (ViewBag.DashboardError != null) { <div class="alert alert-warning">@ViewBag.DashboardError</div> }
+@if (ViewBag.ModelMetricsError != null) { <div class="alert alert-warning">@ViewBag.ModelMetricsError</div> }
+
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4"><div class="card border-left-primary shadow h-100 py-2"><div class="card-body"><div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Documentos</div><div class="h5 mb-0 font-weight-bold text-gray-800">@GetInt(dash,"totalDocumentos")</div><div class="small text-muted">Activos: @GetInt(dash,"documentosActivos")</div></div></div></div>
+    <div class="col-xl-3 col-md-6 mb-4"><div class="card border-left-success shadow h-100 py-2"><div class="card-body"><div class="text-xs font-weight-bold text-success text-uppercase mb-1">OCR procesados</div><div class="h5 mb-0 font-weight-bold text-gray-800">@GetInt(dash,"documentosProcesadosOcr")</div><div class="small text-muted">Entidades: @GetInt(dash,"entidadesExtraidas")</div></div></div></div>
+    <div class="col-xl-3 col-md-6 mb-4"><div class="card border-left-info shadow h-100 py-2"><div class="card-body"><div class="text-xs font-weight-bold text-info text-uppercase mb-1">Clasificaciones IA</div><div class="h5 mb-0 font-weight-bold text-gray-800">@GetInt(dash,"clasificacionesAutomaticas")</div><div class="small text-muted">Naive Bayes</div></div></div></div>
+    <div class="col-xl-3 col-md-6 mb-4"><div class="card border-left-warning shadow h-100 py-2"><div class="card-body"><div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Búsquedas</div><div class="h5 mb-0 font-weight-bold text-gray-800">@GetInt(dash,"busquedasRealizadas")</div><div class="small text-muted">Promedio: @GetDbl(dash,"tiempoPromedioBusquedaMs").ToString("0") ms</div></div></div></div>
+</div>
+
+<div class="row">
+    <div class="col-xl-6 col-lg-6"><div class="card shadow mb-4"><div class="card-header py-3 bg-second-primary"><h6 class="m-0 font-weight-bold text-white">Documentos por categoría</h6></div><div class="card-body"><div style="height:280px"><canvas id="chartCat"></canvas></div></div></div></div>
+    <div class="col-xl-6 col-lg-6"><div class="card shadow mb-4"><div class="card-header py-3 bg-second-primary"><h6 class="m-0 font-weight-bold text-white">Documentos por usuario</h6></div><div class="card-body"><div style="height:280px"><canvas id="chartUsr"></canvas></div></div></div></div>
+</div>
+<div class="row">
+    <div class="col-xl-6 col-lg-6"><div class="card shadow mb-4"><div class="card-header py-3 bg-second-primary"><h6 class="m-0 font-weight-bold text-white">Documentos por mes</h6></div><div class="card-body"><div style="height:280px"><canvas id="chartMes"></canvas></div></div></div></div>
+    <div class="col-xl-6 col-lg-6"><div class="card shadow mb-4"><div class="card-header py-3 bg-second-primary"><h6 class="m-0 font-weight-bold text-white">Búsquedas por mes</h6></div><div class="card-body"><div style="height:280px"><canvas id="chartBusMes"></canvas></div></div></div></div>
+</div>
+
+<hr/>
+<h5 class="text-gray-800 mb-3">Métricas Naive Bayes</h5>
+
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2"><div class="card-body"><div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Accuracy</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">@Fmt(accuracy)</div>
+                <div class="small text-muted">Raw: @FmtRaw(accuracy)</div>
+            </div>
+            <div class="col-auto"><i class="fas fa-bullseye fa-2x text-gray-300"></i></div>
+        </div></div></div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2"><div class="card-body"><div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Macro F1</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">@Fmt(macroF1)</div>
+                <div class="small text-muted">Raw: @FmtRaw(macroF1)</div>
+            </div>
+            <div class="col-auto"><i class="fas fa-chart-line fa-2x text-gray-300"></i></div>
+        </div></div></div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2"><div class="card-body"><div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Weighted F1</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">@Fmt(weightedF1)</div>
+                <div class="small text-muted">Raw: @FmtRaw(weightedF1)</div>
+            </div>
+            <div class="col-auto"><i class="fas fa-balance-scale fa-2x text-gray-300"></i></div>
+        </div></div></div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2"><div class="card-body"><div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Metadata</div>
+                <div class="small font-weight-bold text-gray-800">@(metadataFound ? "Encontrada" : "No encontrada")</div>
+                <div class="small text-muted text-truncate" title="@modelPath">@System.IO.Path.GetFileName(modelPath)</div>
+            </div>
+            <div class="col-auto"><i class="fas fa-file-code fa-2x text-gray-300"></i></div>
+        </div></div></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-second-primary">
+                <h6 class="m-0 font-weight-bold text-white">Métricas por clase (Naive Bayes)</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area" style="height: 320px !important;">
+                    <canvas id="chartNbClase"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-second-primary">
+                <h6 class="m-0 font-weight-bold text-white">Resumen</h6>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm table-bordered mb-0">
+                    <tbody>
+                        <tr><th>Modelo</th><td class="small">@System.IO.Path.GetFileName(modelPath)</td></tr>
+                        <tr><th>Creado (UTC)</th><td class="small">@createdAt</td></tr>
+                        <tr><th>Disponible</th><td>@(available ? "Sí" : "No")</td></tr>
+                        <tr><th>Metadata</th><td>@(metadataFound ? "Sí" : "No")</td></tr>
+                        <tr><th>Accuracy</th><td>@FmtRaw(accuracy)</td></tr>
+                        <tr><th>Macro F1</th><td>@FmtRaw(macroF1)</td></tr>
+                        <tr><th>Weighted F1</th><td>@FmtRaw(weightedF1)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-7 col-lg-7">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-second-primary">
+                <h6 class="m-0 font-weight-bold text-white">Reporte por clase</h6>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-sm">
+                    <thead><tr><th>Clase</th><th>Precision</th><th>Recall</th><th>F1</th><th>Support</th></tr></thead>
+                    <tbody>
+                    @if (report.HasValue)
+                    {
+                        foreach (var prop in report.Value.EnumerateObject())
+                        {
+                            if (prop.Name == "accuracy") { continue; }
+                            if (prop.Value.ValueKind != JsonValueKind.Object) { continue; }
+                            var p = prop.Value.TryGetProperty("precision", out var pv) && pv.ValueKind == JsonValueKind.Number ? pv.GetDouble().ToString("0.0000") : "N/D";
+                            var rc = prop.Value.TryGetProperty("recall", out var rv) && rv.ValueKind == JsonValueKind.Number ? rv.GetDouble().ToString("0.0000") : "N/D";
+                            var f1 = prop.Value.TryGetProperty("f1-score", out var fv) && fv.ValueKind == JsonValueKind.Number ? fv.GetDouble().ToString("0.0000") : "N/D";
+                            var sup = prop.Value.TryGetProperty("support", out var sv) ? sv.ToString() : "N/D";
+                            <tr><td>@prop.Name</td><td>@p</td><td>@rc</td><td>@f1</td><td>@sup</td></tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="5" class="text-center text-muted">No hay métricas disponibles.</td></tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-5 col-lg-5">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-second-primary">
+                <h6 class="m-0 font-weight-bold text-white">Matriz de confusión</h6>
+            </div>
+            <div class="card-body table-responsive">
+                @if (cm.Count > 0 && cmLabels.Count > 0)
+                {
+                    <table class="table table-bordered table-sm text-center">
+                        <thead>
+                            <tr>
+                                <th>Real \ Pred</th>
+                                @foreach (var l in cmLabels) { <th>@l</th> }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < cm.Count; i++)
+                            {
+                                <tr>
+                                    <th>@(i < cmLabels.Count ? cmLabels[i] : i.ToString())</th>
+                                    @foreach (var cell in cm[i]) { <td>@cell</td> }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="text-muted text-center">No hay matriz de confusión disponible.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/vendor/chart.js/Chart.min.js"></script>
+    <script>
+        const labels = @Html.Raw(JsonSerializer.Serialize(labels));
+        const precisions = @Html.Raw(JsonSerializer.Serialize(precisions));
+        const recalls = @Html.Raw(JsonSerializer.Serialize(recalls));
+        const f1s = @Html.Raw(JsonSerializer.Serialize(f1s));
+
+        if (labels.length > 0 && document.getElementById('chartNbClase')) {
+            new Chart(document.getElementById('chartNbClase').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Precision', data: precisions, backgroundColor: '#4e73df' },
+                        { label: 'Recall', data: recalls, backgroundColor: '#1cc88a' },
+                        { label: 'F1', data: f1s, backgroundColor: '#f6c23e' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { yAxes: [{ ticks: { beginAtZero: true, max: 1 } }] }
+                }
+            });
+        }
+
+        const catLabels = @Html.Raw(JsonSerializer.Serialize(catLabels));
+        const catVals = @Html.Raw(JsonSerializer.Serialize(catVals));
+        const usrLabels = @Html.Raw(JsonSerializer.Serialize(usrLabels));
+        const usrVals = @Html.Raw(JsonSerializer.Serialize(usrVals));
+        const mesLabels = @Html.Raw(JsonSerializer.Serialize(mesLabels));
+        const mesVals = @Html.Raw(JsonSerializer.Serialize(mesVals));
+        const busMesLabels = @Html.Raw(JsonSerializer.Serialize(busMesLabels));
+        const busMesVals = @Html.Raw(JsonSerializer.Serialize(busMesVals));
+        function mkBar(id, lbs, vals, color) {
+            const el = document.getElementById(id);
+            if (!el || !lbs.length) return;
+            new Chart(el.getContext('2d'), { type:'bar', data:{ labels: lbs, datasets:[{ label:'Cantidad', data: vals, backgroundColor: color }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ yAxes:[{ ticks:{ beginAtZero:true, precision:0 } }] } } });
+        }
+        function mkLine(id, lbs, vals, color) {
+            const el = document.getElementById(id);
+            if (!el || !lbs.length) return;
+            new Chart(el.getContext('2d'), { type:'line', data:{ labels: lbs, datasets:[{ label:'Cantidad', data: vals, borderColor: color, backgroundColor:'rgba(78,115,223,0.1)', fill:true }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ yAxes:[{ ticks:{ beginAtZero:true, precision:0 } }] } } });
+        }
+        mkBar('chartCat', catLabels, catVals, '#4e73df');
+        mkBar('chartUsr', usrLabels, usrVals, '#1cc88a');
+        mkLine('chartMes', mesLabels, mesVals, '#36b9cc');
+        mkLine('chartBusMes', busMesLabels, busMesVals, '#f6c23e');
+    </script>
+}

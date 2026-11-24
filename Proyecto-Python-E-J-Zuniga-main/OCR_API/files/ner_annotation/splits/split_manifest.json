@@ -1,0 +1,14 @@
+{
+  "input": "OCR_API/files/ner_annotation/corpus_draft.jsonl",
+  "seed": 42,
+  "strategy": "random_shuffle",
+  "ratio": [0.70, 0.15, 0.15],
+  "counts": {
+    "train": 25,
+    "dev": 5,
+    "test": 6,
+    "total": 36
+  },
+  "frozen_at": "2026-11-22",
+  "notes": "Partición regenerada después de corregir 40 spans misalineados y agregar 5 filas de cobertura. Requiere revisión humana antes de uso como benchmark defendible."
+}

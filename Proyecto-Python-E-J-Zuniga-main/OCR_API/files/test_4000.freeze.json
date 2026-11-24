@@ -1,0 +1,11 @@
+{
+  "file": "OCR_API/files/test_4000.csv",
+  "sha256": "63c2964415b19f274b355c38f45b45d271da8a4aea64baa994a63085e3fbd183",
+  "rows": 800,
+  "labels": {
+    "penal": 400,
+    "civil": 400
+  },
+  "frozen_at_utc": "2026-11-22T00:00:00Z",
+  "reason": "Conjunto de prueba congelado para evaluación reproducible (Fase 1). No usar para entrenamiento."
+}

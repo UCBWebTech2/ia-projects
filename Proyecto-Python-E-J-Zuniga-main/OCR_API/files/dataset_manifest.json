@@ -1,0 +1,172 @@
+{
+  "generated_at_utc": "2026-11-22T22:17:51.971022+00:00",
+  "files": [
+    {
+      "path": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\train_4000.csv",
+      "exists": true,
+      "sha256": "7851c97c22b7f4f914e96dbfebbd527fecccb8b5a67a7298f67fe8d9580ba8cf",
+      "rows": 3200,
+      "columns": [
+        "texto",
+        "etiqueta"
+      ],
+      "empty_text": 0,
+      "invalid_label": 0,
+      "label_counts": {
+        "penal": 1600,
+        "civil": 1600
+      },
+      "duplicate_rows": 0,
+      "unique_hashes": 3200,
+      "sample_hashes_head": [
+        "303106d724aec2691b80e9954c74fd925ceea6a94494f21686baa7646e4f2cc7",
+        "15877fc868a102a6b4159f0ab176f1c9761109e79cbe2019b7bff5bd8ac46f71",
+        "f6c336c33c1e5659eb0b2385782ac1046a4c04f4ac1a7c7abaee57b5afec5645"
+      ]
+    },
+    {
+      "path": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\test_4000.csv",
+      "exists": true,
+      "sha256": "63c2964415b19f274b355c38f45b45d271da8a4aea64baa994a63085e3fbd183",
+      "rows": 800,
+      "columns": [
+        "texto",
+        "etiqueta"
+      ],
+      "empty_text": 0,
+      "invalid_label": 0,
+      "label_counts": {
+        "penal": 400,
+        "civil": 400
+      },
+      "duplicate_rows": 0,
+      "unique_hashes": 800,
+      "sample_hashes_head": [
+        "69f07bcd8bab6ca2e8e13f9ea51b7ef634fb83873ccbe245b08f21c9e9a04e45",
+        "f00630e1d74385ad2a7963cf14b8ffbf8d414d86305cb134deb8a5ba2d160cea",
+        "1281d181a0fa2ce092512b393cb8268ea0c1d40cf45c9399741bcd3a5ce59221"
+      ]
+    },
+    {
+      "path": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\test_dataset.csv",
+      "exists": true,
+      "sha256": "3ec7173cd5868c132ce6c2d2667a0ae0fb1d08ea9c2e5cbeabb64ffcd3e0dc47",
+      "rows": 200,
+      "columns": [
+        "texto",
+        "etiqueta"
+      ],
+      "empty_text": 0,
+      "invalid_label": 0,
+      "label_counts": {
+        "penal": 104,
+        "civil": 96
+      },
+      "duplicate_rows": 3,
+      "unique_hashes": 197,
+      "sample_hashes_head": [
+        "33b3c47a76e7ea6b8c3b3b3f210022ed87d779decf83abd58083e9459e626455",
+        "38ac7baad9c1f69ce69a6ed95c433c804fdb14719cf1e93a82bbd8fedc1132c8",
+        "e42f93c680a744425f7776623e9556d4979f98b095303c2ab86627e00907f2ce"
+      ]
+    },
+    {
+      "path": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\dataset_derecho.csv",
+      "exists": true,
+      "sha256": "4db506d84cfbfbd02335eb8600837c011e0e2b4869e02ce9f64d48c88facb42d",
+      "rows": 3018,
+      "columns": [
+        "texto",
+        "etiqueta"
+      ],
+      "empty_text": 0,
+      "invalid_label": 1,
+      "label_counts": {
+        "penal": 1509,
+        "civil": 1508,
+        "etiqueta": 1
+      },
+      "duplicate_rows": 510,
+      "unique_hashes": 2508,
+      "sample_hashes_head": [
+        "165f4b308aed3804fa7798751115d2a0441f9dc9391dc320f0e810fd323b7aa7",
+        "08d2f8ca1d1b40845d997a41afffad8a1bb8f811472f369368df03de1639415c",
+        "66e16b658f79cee2139d12f72cb3d32618bb4d8a0506dc5d0289a1f45cc7a63c"
+      ]
+    },
+    {
+      "path": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\dataset_derecho_4k.csv",
+      "exists": true,
+      "sha256": "86bb1d7d480972b721ed197d9a891f008c6c57be65ad981bd95c70e52f225325",
+      "rows": 4000,
+      "columns": [
+        "texto",
+        "etiqueta"
+      ],
+      "empty_text": 0,
+      "invalid_label": 0,
+      "label_counts": {
+        "penal": 2000,
+        "civil": 2000
+      },
+      "duplicate_rows": 0,
+      "unique_hashes": 4000,
+      "sample_hashes_head": [
+        "a939100ec9839968f079322dbb5bd547aef09c641f561f30ab6aa9410548b2ce",
+        "626daca6480fde36676f9503e61a6bddff5460b3b427a4ea00c1b0bc7cd7d0d3",
+        "c106411197b2de7ebbc79551033b1fbf0baa4ccef636b0d3b830a81a72bd1684"
+      ]
+    }
+  ],
+  "overlaps": [
+    {
+      "a": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\train_4000.csv",
+      "b": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\test_dataset.csv",
+      "overlap_rows": 126
+    },
+    {
+      "a": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\train_4000.csv",
+      "b": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\dataset_derecho.csv",
+      "overlap_rows": 612
+    },
+    {
+      "a": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\train_4000.csv",
+      "b": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\dataset_derecho_4k.csv",
+      "overlap_rows": 3200
+    },
+    {
+      "a": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\test_4000.csv",
+      "b": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\test_dataset.csv",
+      "overlap_rows": 29
+    },
+    {
+      "a": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\test_4000.csv",
+      "b": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\dataset_derecho.csv",
+      "overlap_rows": 128
+    },
+    {
+      "a": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\test_4000.csv",
+      "b": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\dataset_derecho_4k.csv",
+      "overlap_rows": 800
+    },
+    {
+      "a": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\test_dataset.csv",
+      "b": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\dataset_derecho.csv",
+      "overlap_rows": 197
+    },
+    {
+      "a": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\test_dataset.csv",
+      "b": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\dataset_derecho_4k.csv",
+      "overlap_rows": 155
+    },
+    {
+      "a": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\dataset_derecho.csv",
+      "b": "C:\\ia projects\\Proyecto-Python-E-J-Zuniga-main\\OCR_API\\files\\dataset_derecho_4k.csv",
+      "overlap_rows": 740
+    }
+  ],
+  "notes": [
+    "test_4000.csv debe permanecer congelado para evaluación.",
+    "Cualquier fila con etiqueta fuera de {civil, penal} debe corregirse antes de entrenar."
+  ]
+}

@@ -1,0 +1,160 @@
+﻿@using PFEstudioJuridico.Models;
+@model Usuario
+@{
+    ViewData["Title"] = "Perfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-sm-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-second-primary">
+                <h6 class="m-0 font-weight-bold text-white"><i class="fas fa-user"></i> Mis Datos</h6>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-sm-12">
+                            <img id="imgFoto" src="https://cdn.pixabay.com/photo/2016/04/15/18/05/computer-1331579_640.png" class="rounded mx-auto d-block" style="width: 200px; height: 200px;">
+                        </div>
+                    </div>
+                    <input type="hidden" value="@Model.idUsuario" id="txtId">
+                    <div class="form-row">
+                        <div class="form-group col-sm-12">
+                            <label for="txtNombre">Nombre</label>
+                            <input type="text" class="form-control form-control-sm" disabled id="txtNombre" value="@Model.nombreUsuario">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-sm-12">
+                            <label for="txtCorreo">Correo</label>
+                            <input type="email" class="form-control form-control-sm" disabled id="txtCorreo" value="@Model.correoElectronico">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-sm-12">
+                            <label for="txtRol">Rol</label>
+                            <input type="text" class="form-control form-control-sm" disabled id="txtRol" value="@Model.Rol">
+                        </div>
+                    </div>
+
+                    <hr>
+                    @* <div class="row">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-success btn-sm btn-block" id="btnGuardarCambios">Guardar Cambios</button>
+                        </div>
+                    </div> *@
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Sección para mostrar el ícono -->
+    @* <div class="col-sm-12">
+        <div class="alert alert-success" role="alert">
+            <i class='fas fa-check-circle'></i> Cambios guardados con éxito.
+        </div>
+    </div> *@
+    <div class="col-sm-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-second-primary">
+                <h6 class="m-0 font-weight-bold text-white"><i class="fas fa-key"></i> Cambiar Contraseña</h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="CambiarContrasenia" asp-controller="Acceso" method="post">
+                    <div class="form-row">
+                        <div class="form-group col-sm-12">
+                            <label for="txtClaveActual">Contraseña Actual</label>
+                            <input type="password" class="form-control form-control-sm input-validar" id="txtClaveActual" name="ContraseniaActual" required autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-sm-12">
+                            <label for="txtClaveNueva">Nueva Contraseña</label>
+                            <input type="password" class="form-control form-control-sm input-validar" id="txtClaveNueva" name="NuevaContrasenia" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-sm-12">
+                            <label for="txtConfirmarClave">Confirmar Contraseña</label>
+                            <input type="password" class="form-control form-control-sm input-validar" id="txtConfirmarClave" name="ConfirmarClave" required>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-success btn-sm btn-block" id="btnCambiarClave">Guardar Cambios</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de alerta -->
+<div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="alertModalLabel">Mensaje</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="alertModalBody">
+                <div id="modalMessageContent">
+                </div>
+            </div>
+            <div class="modal-footer">
+                @* <button type="button" class="btn btn-primary" id="alertModalButton" data-dismiss="modal">Aceptar</button> *@
+                <a class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Salir">
+                    Aceptar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Botón de prueba para mostrar el modal -->
+@* <button type="button" class="btn btn-success" data-toggle="modal" data-target="#alertModal" onclick="$('#modalMessageContent').html('<i class=\'fas fa-check-circle\'></i> Mensaje de prueba.');">Abrir Modal de Prueba</button> *@
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Obtén el mensaje y tipo de mensaje desde ViewData
+            var mensaje = '@Html.Raw(ViewData["Mensaje"] ?? "")';  // Usa Html.Raw para evitar problemas con caracteres especiales
+            var tipoMensaje = '@Html.Raw(ViewData["TipoMensaje"] ?? "info")'; // Valor por defecto si no hay tipo de mensaje
+
+            // Solo muestra el modal si hay un mensaje
+            if (mensaje) {
+                var icono = "";
+                var claseModal = ""; // Clase dinámica para el color del modal
+
+                // Define el ícono y la clase de alerta según el tipo de mensaje
+                switch (tipoMensaje) {
+                    case "success":
+                        icono = "<i class='fas fa-check-circle'></i>";
+                        claseModal = "alert alert-success";
+                        break;
+                    case "error":
+                        icono = "<i class='fas fa-times-circle'></i>";
+                        claseModal = "alert alert-danger";
+                        break;
+                    default:
+                        icono = "<i class='fas fa-info-circle'></i>";
+                        claseModal = "alert alert-warning";
+                        break;
+                }
+
+                // Actualiza el contenido del modal
+                $("#modalMessageContent").html(icono + " " + mensaje);
+                // Cambia la clase de la ventana modal para aplicar los estilos de color
+                $("#alertModalBody").attr("class", claseModal);
+                // Cambia también la clase del modal completo
+                $("#alertModal .modal-content").attr("class", claseModal + " modal-content");
+                // Muestra el modal
+                $("#alertModal").modal("show");
+            }
+        });
+    </script>
+}

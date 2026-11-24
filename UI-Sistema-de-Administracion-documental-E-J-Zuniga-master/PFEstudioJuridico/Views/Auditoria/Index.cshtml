@@ -1,0 +1,114 @@
+﻿@using PFEstudioJuridico.DTOs;
+@model List<AuditoriaDTO>
+
+@{
+    ViewData["Title"] = "Auditoría";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Estilos {
+    <link rel="stylesheet" href="@Url.Content("~/vendor/datatables/extensiones/css/responsive.dataTables.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/vendor/datatables/extensiones/css/buttons.dataTables.min.css")">
+    <style>
+        td, th { word-wrap: break-word; }
+        td { max-height: 50px; overflow: hidden; }
+        .table th, .table td { vertical-align: middle; }
+        .table-filters .form-control { min-width: 160px; }
+    </style>
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-second-primary">
+        <h6 class="m-0 font-weight-bold text-white">Vista de Auditoría</h6>
+    </div>
+    <div class="card-body">
+        <div class="row table-filters mb-3">
+            <div class="col-md-3 mb-2">
+                <label class="small font-weight-bold mb-1" for="filtroAccion">Acción</label>
+                <input id="filtroAccion" type="text" class="form-control form-control-sm" placeholder="Filtrar acción..." />
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="small font-weight-bold mb-1" for="filtroUsuario">Usuario</label>
+                <input id="filtroUsuario" type="text" class="form-control form-control-sm" placeholder="Filtrar usuario..." />
+            </div>
+            <div class="col-md-4 mb-2">
+                <label class="small font-weight-bold mb-1" for="filtroDescripcion">Descripción</label>
+                <input id="filtroDescripcion" type="text" class="form-control form-control-sm" placeholder="Filtrar descripción..." />
+            </div>
+            <div class="col-md-2 mb-2 d-flex align-items-end">
+                <button type="button" id="btnLimpiarFiltrosAudit" class="btn btn-outline-secondary btn-sm btn-block">
+                    <i class="fas fa-eraser"></i> Limpiar
+                </button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="auditTable" cellspacing="0" style="width:100%; table-layout:fixed;">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Acción</th>
+                        <th>Usuario</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var registro in Model)
+                        {
+                            <tr>
+                                <td>@registro.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@registro.Accion</td>
+                                <td>@registro.NombreUsuario</td>
+                                <td>@registro.Descripcion</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">No se encontraron registros de auditoría.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="@Url.Content("~/vendor/datatables/extensiones/js/dataTables.responsive.min.js")"></script>
+    <script src="@Url.Content("~/vendor/datatables/extensiones/js/dataTables.buttons.min.js")"></script>
+    <script src="@Url.Content("~/vendor/datatables/extensiones/js/jszip.min.js")"></script>
+    <script src="@Url.Content("~/vendor/datatables/extensiones/js/buttons.html5.min.js")"></script>
+    <script src="@Url.Content("~/vendor/datatables/extensiones/js/buttons.print.min.js")"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#auditTable').DataTable({
+                paging: true,
+                lengthMenu: [10, 25, 50, 75, 100],
+                pageLength: 10,
+                responsive: true,
+                order: [[0, 'desc']],
+                language: {
+                    search: "Buscar:",
+                    lengthMenu: "Mostrar _MENU_ registros por página",
+                    zeroRecords: "No se encontraron registros",
+                    info: "Mostrando página _PAGE_ de _PAGES_",
+                    infoEmpty: "No hay registros disponibles",
+                    infoFiltered: "(filtrado de _MAX_ registros totales)",
+                    paginate: { first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior" }
+                },
+                dom: 'lfrtip'
+            });
+
+            $('#filtroAccion').on('keyup change', function () { table.column(1).search(this.value).draw(); });
+            $('#filtroUsuario').on('keyup change', function () { table.column(2).search(this.value).draw(); });
+            $('#filtroDescripcion').on('keyup change', function () { table.column(3).search(this.value).draw(); });
+            $('#btnLimpiarFiltrosAudit').on('click', function () {
+                $('#filtroAccion, #filtroUsuario, #filtroDescripcion').val('');
+                table.columns().search('').draw();
+            });
+        });
+    </script>
+}

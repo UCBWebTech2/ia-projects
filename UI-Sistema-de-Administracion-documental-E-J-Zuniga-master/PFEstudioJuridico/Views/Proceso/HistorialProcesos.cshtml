@@ -1,0 +1,161 @@
+﻿@using PFEstudioJuridico.Models.DTOs;
+@model List<DocumentoDTO>
+
+@{
+    ViewData["Title"] = "Historial de Documentos del Proceso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Estilos {
+    <link rel="stylesheet" href="@Url.Content("~/vendor/datatables/dataTables.bootstrap4.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/vendor/datatables/extensiones/css/responsive.dataTables.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/vendor/datatables/extensiones/css/buttons.dataTables.min.css")">
+    <style>
+        td, th {
+            word-wrap: break-word;
+        }
+
+        td {
+            max-height: 50px;
+            overflow: hidden;
+        }
+    </style>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade" role="alert">
+        <strong>¡Éxito!</strong> @TempData["Success"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade" role="alert">
+        <strong>¡Error!</strong> @TempData["Error"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-second-primary">
+        <h6 class="m-0 font-weight-bold text-white">Documentos del Proceso.</h6>
+    </div>
+    <div class="card-body">
+        @if (TempData["Mensaje"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["Mensaje"]
+            </div>
+        }
+
+        <hr />
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered" id="tbdata" cellspacing="0" style="width:100%; table-layout:fixed;">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Subido por</th>
+                            <th>Categoría</th>
+                            <th>Habilitado</th>
+                            <th>Fecha de Registro</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Count > 0)
+                        {
+                            foreach (var documento in Model)
+                            {
+                                if (User.IsInRole("Abogado") && !documento.Habilitado)
+                                {
+                                    continue;
+                                }
+                                <tr>
+                                    <td>@documento.NombreDocumento</td>
+                                    <td>@documento.TipoDocumento</td>
+                                    <td>@documento.NombreUsuario</td>
+                                    <td>@documento.NombreCategoria</td>
+                                    @if (User.IsInRole("Administrador"))
+                                    {
+                                        <td>
+                                            @if (documento.Habilitado)
+                                            {
+                                                <span class="badge badge-info">Habilitado</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger">No habilitado</span>
+                                            }
+                                        </td>
+                                    }
+                                    <td>@(documento.FechaCreacion.HasValue ? documento.FechaCreacion.Value.ToString("dd/MM/yyyy") : "No especificada")</td>
+                                    <td>
+                                        <a class="btn btn-info btn-sm" href="@Url.Action("DetallesDocumento", "Documento", new { id = documento.IdDoc })">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>
+                                        @if (!string.IsNullOrEmpty(documento.RutaDocumento))
+                                        {
+                                            <a class="btn btn-success btn-sm" href="@documento.RutaDocumento" target="_blank" title="Ver documento">
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-secondary btn-sm" disabled>
+                                                <i class="fas fa-download"></i> No disponible
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center">No se encontraron documentos para este proceso.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="@Url.Content("~/vendor/datatables/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/vendor/datatables/dataTables.bootstrap4.min.js")"></script>
+    <script src="@Url.Content("~/vendor/datatables/extensiones/js/dataTables.responsive.min.js")"></script>
+    <script src="@Url.Content("~/vendor/datatables/extensiones/js/dataTables.buttons.min.js")"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tbdata').DataTable({
+                "paging": true,
+                "lengthMenu": [10, 25, 50],
+                "language": {
+                    "search": "Buscar:",
+                    "lengthMenu": "Mostrar _MENU_ registros por página",
+                    "zeroRecords": "No se encontraron registros",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No hay registros disponibles",
+                    "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                "responsive": true
+            });
+        });
+    </script>
+}

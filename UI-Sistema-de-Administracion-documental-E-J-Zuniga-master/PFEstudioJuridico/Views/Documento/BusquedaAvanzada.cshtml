@@ -1,0 +1,267 @@
+@using PFEstudioJuridico.Models.DTOs;
+@using PFEstudioJuridico.DTOs;
+@using Newtonsoft.Json
+
+@model List<DocumentoDTO>
+
+@{
+    ViewData["Title"] = "Búsqueda Avanzada de Documentos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Estilos {
+    <link rel="stylesheet" href="@Url.Content("~/vendor/datatables/extensiones/css/responsive.dataTables.min.css")">
+    <link rel="stylesheet" href="@Url.Content("~/vendor/datatables/extensiones/css/buttons.dataTables.min.css")">
+
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-primary">
+        <h6 class="m-0 font-weight-bold text-white">Búsqueda de Documentos</h6>
+    </div>
+    <div class="card-body">
+        <!-- Formulario de Búsqueda Avanzada -->
+        <form asp-action="BuscarPorFiltros" method="post" class="mb-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="query">Buscar en contenido</label>
+                    <input type="text" class="form-control" id="query" name="Query" placeholder="Ingrese palabras clave">
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <label for="tipoDocumento">Tipo de Documento</label>
+                    <select id="tipoDocumento" name="TipoDocumento" class="form-control">
+                        <option value="">-- Seleccionar Tipo --</option>
+                        <option value="PDF">PDF</option>
+                        <option value="DOCX">DOCX</option>
+                        <option value="JPG">JPG</option>
+                        <option value="PNG">PNG</option>
+                        <option value="DOC">DOC</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="categoria">Categoría</label>
+                    <select id="categoria" name="Categoria" class="form-control">
+                        <option value="">-- Seleccionar Categoría --</option>
+                        @if (ViewBag.Categorias != null)
+                        {
+                            foreach (var categoria in ViewBag.Categorias)
+                            {
+                                <option value="@categoria.IdCategoria">@categoria.NombreCategoria</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="">-- No disponible --</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="proceso">Proceso</label>
+                    <select class="form-control select2" id="proceso" name="Proceso">
+                        <option value="">-- Seleccionar Proceso --</option>
+                        @{
+                            var procesos = ViewBag.Procesos as List<PFEstudioJuridico.DTOs.ProcesoDTO> ?? new List<PFEstudioJuridico.DTOs.ProcesoDTO>();
+                        }
+                        @foreach (var proceso in procesos)
+                        {
+                            <option value="@proceso.IdProceso">@proceso.NombreProceso</option>
+                        }
+                    </select>
+                </div>
+
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <label for="fechaInicio">Fecha de Inicio</label>
+                    <input type="date" id="fechaInicio" name="FechaInicio" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label for="fechaFin">Fecha Fin</label>
+                    <input type="date" id="fechaFin" name="FechaFin" class="form-control">
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <label for="clienteNombre">Cliente</label>
+                    <input type="text" class="form-control" id="clienteNombre" name="ClienteNombre" placeholder="Nombre del cliente">
+                </div>
+                <div class="col-md-4">
+                    <label for="idUsuario">Usuario/Abogado (ID)</label>
+                    <input type="number" class="form-control" id="idUsuario" name="IdUsuario" placeholder="ID usuario">
+                </div>
+                <div class="col-md-4">
+                    <label for="estadoDocumento">Estado documento</label>
+                    <select id="estadoDocumento" name="EstadoDocumento" class="form-control">
+                        <option value="">-- Todos --</option>
+                        <option value="ACTIVO">Activo</option>
+                        <option value="ARCHIVADO">Archivado</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+
+                </div>
+            </div>
+        </form>
+
+        <hr />
+        <h6 class="font-weight-bold text-primary mb-3"><i class="fas fa-tags mr-1"></i> Búsqueda por entidad NER</h6>
+        <form asp-action="BuscarPorEntidad" method="post" class="mb-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="tipoEntidad">Tipo de entidad</label>
+                    <select id="tipoEntidad" name="tipoEntidad" class="form-control">
+                        @{ var tipoSel = ViewBag.TipoEntidad as string ?? ""; }
+                        <option value="" selected="@(string.IsNullOrEmpty(tipoSel))">-- Cualquier tipo --</option>
+                        <option value="PER" selected="@(tipoSel=="PER")">Persona (PER)</option>
+                        <option value="LOC" selected="@(tipoSel=="LOC")">Lugar (LOC)</option>
+                        <option value="ORG" selected="@(tipoSel=="ORG")">Organización (ORG)</option>
+                        <option value="INSTITUCION" selected="@(tipoSel=="INSTITUCION")">Institución</option>
+                        <option value="LEY" selected="@(tipoSel=="LEY")">Ley</option>
+                        <option value="ARTICULO" selected="@(tipoSel=="ARTICULO")">Artículo</option>
+                        <option value="INSTRUMENTO" selected="@(tipoSel=="INSTRUMENTO")">Instrumento</option>
+                        <option value="DEMANDANTE" selected="@(tipoSel=="DEMANDANTE")">Demandante</option>
+                        <option value="DEMANDADO" selected="@(tipoSel=="DEMANDADO")">Demandado</option>
+                        <option value="JUEZ" selected="@(tipoSel=="JUEZ")">Juez</option>
+                        <option value="FISCAL" selected="@(tipoSel=="FISCAL")">Fiscal</option>
+                        <option value="ABOGADO" selected="@(tipoSel=="ABOGADO")">Abogado</option>
+                        <option value="NRO_PROCESO" selected="@(tipoSel=="NRO_PROCESO")">Nro. Proceso</option>
+                        <option value="JUZGADO" selected="@(tipoSel=="JUZGADO")">Juzgado</option>
+                        <option value="FECHA_AUDIENCIA" selected="@(tipoSel=="FECHA_AUDIENCIA")">Fecha audiencia</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="valorEntidad">Valor / término</label>
+                    <input type="text" class="form-control" id="valorEntidad" name="valor" value="@(ViewBag.ValorEntidad as string ?? "")" placeholder="Ej: Juan Pérez, Juzgado Civil, 123/2026">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-outline-primary btn-block"><i class="fas fa-search"></i> Buscar entidad</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Tabla de Resultados -->
+        <div class="table-responsive">
+            <table class="table table-bordered" id="tbdata" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Subido por</th>
+                        <th>Categoría</th>
+                        <th>Proceso</th>
+                        <th>Estado</th>  @* SIEMPRE presente, aunque el contenido varíe *@
+                        <th>Fecha de Registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var documento in Model)
+                        {
+                            if (User.IsInRole("Abogado") && !documento.Habilitado)
+                            {
+                                continue;
+                            }
+                            <tr>
+                                <td>@documento.NombreDocumento</td>
+                                <td>@documento.TipoDocumento</td>
+                                <td>@documento.NombreUsuario</td>
+                                <td>@documento.NombreCategoria</td>
+                                <td>@documento.NombreProceso</td>
+                                @if (User.IsInRole("Administrador"))
+                                {
+                                    <td>
+                                        @if (documento.Habilitado)
+                                        {
+                                            <span class="badge badge-info">Activo</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">No Activo</span>
+                                        }
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+
+                                <td>@(documento.FechaCreacion?.ToString("dd/MM/yyyy") ?? "No especificada")</td>
+                                <td>
+                                    <a class="btn btn-info btn-sm" href="@Url.Action("DetallesDocumento", "Documento", new { id = documento.IdDoc })">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                    @if (!string.IsNullOrEmpty(documento.RutaDocumento))
+                                    {
+                                        <a class="btn btn-info btn-sm" href="@documento.RutaDocumento" target="_blank">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center">
+                                No se encontraron documentos con los filtros aplicados.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+
+        $(function () {
+            inicializarSelects();
+            console.log("jQuery listo - inicializando select2");
+            if ($('#tbdata').length > 0) {
+                $('#tbdata').DataTable({
+                    paging: true,
+                    pageLength: 10,
+                    language: {
+                        search: "Buscar:",
+                        lengthMenu: "Mostrar _MENU_ registros por página",
+                        zeroRecords: "No se encontraron registros",
+                        info: "Mostrando página _PAGE_ de _PAGES_",
+                        infoEmpty: "No hay registros disponibles",
+                        infoFiltered: "(filtrado de _MAX_ registros totales)"
+                    }
+                });
+            }
+            // Inicializar select2 para Proceso y Categoría
+            
+        });
+        function inicializarSelects() {
+            $('#proceso').select2({
+                placeholder: "-- Seleccionar Proceso --",
+                width: "100%",
+                dropdownCssClass: "limit-dropdown"
+            });
+            console.log("Select2 aplicado a #proceso");
+            $("#categoria").select2({
+                placeholder: "-- Seleccionar Categoría --",
+                width: "100%",
+                minimumResultsForSearch: 0
+            });
+            console.log("Select2 aplicado a #categoria");
+        }
+
+    </script>
+}

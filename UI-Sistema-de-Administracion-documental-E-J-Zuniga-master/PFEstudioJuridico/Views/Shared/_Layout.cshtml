@@ -1,0 +1,292 @@
+﻿@using System.Security.Claims;
+@using Microsoft.AspNetCore.Identity;
+@{
+    var claimsIdentity = User.Identity as ClaimsIdentity;
+    string nombreUsuario = claimsIdentity?.Claims.FirstOrDefault(c => c.Type == "NombreUsuario")?.Value ?? "No Encontrado";
+    string rolUsuario = claimsIdentity?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Rol no encontrado";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Estudio Juridico - @ViewData["Title"]</title>
+
+    <!-- Custom fonts for this template-->
+    @* <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css"> *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="~/css/sb-admin-2.css" rel="stylesheet">
+    <link href="~/css/law-firm-theme.css" asp-append-version="true" rel="stylesheet">
+    <link href="~/vendor/toastr/toastr.min.css" rel="stylesheet">
+    <link href="~/vendor/sweetalert/sweetalert.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/vendor/datatables/dataTables.bootstrap4.min.css" />
+    <style>
+        @@media (min-width: 768px) {
+            #accordionSidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+                flex-shrink: 0;
+                z-index: 1030;
+            }
+        }
+    </style>
+    
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @await RenderSectionAsync("Estilos", required: false)
+
+</head>
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <li>
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="@Url.Action("Index","Home")">
+                    <div class="sidebar-brand-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div class="sidebar-brand-text mx-3">ESTUDIO JURÍDICO ZÚÑIGA</div>
+                </a>
+            </li>
+
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                <a class="nav-link" href="@Url.Action("Index","Home")">
+                    <i class="fas fa-fw fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+            </li>
+
+            
+
+            @if (User.IsInRole("Administrador"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index","Auditoria")">
+                        <i class="fas fa-fw fa-clipboard-check"></i>
+                        <span>Auditoría</span>
+                    </a>
+                </li>
+            }
+
+            @if (User.IsInRole("Administrador"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index","Dashboard")">
+                        <i class="fas fa-fw fa-chart-bar"></i>
+                        <span>Dashboard NB</span>
+                    </a>
+                </li>
+            }
+            @if (User.IsInRole("Administrador"))
+            {
+                <!-- Nav Item - Administración Collapse Menu -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdministracion">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Administración</span>
+                    </a>
+                    <div id="collapseAdministracion" class="collapse" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="@Url.Action("Index","Usuario")">Usuarios</a>
+                            @* <a class="collapse-item" href="documentos.html">Documentos</a> *@
+                        </div>
+                    </div>
+                </li>
+            }
+            
+            <!-- Nav Item - Documentos Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDocumentos">
+                    <i class="fas fa-fw fa-clipboard-list"></i>
+                    <span>Documentos</span>
+                </a>
+                <div id="collapseDocumentos" class="collapse" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("Index","Documento")">Registro Documentos</a>
+                        <a class="collapse-item" href="@Url.Action("BusquedaAvanzada","Documento")">Búsqueda</a>
+                        <a class="collapse-item" href="@Url.Action("RegistroClasificado","Documento")">Registro Automatizado</a>
+                        @* <a class="collapse-item" href="@Url.Action("Index","Categoria")">Categorias</a> *@
+                    </div>
+                </div>
+            </li>
+
+            @if (User.IsInRole("Administrador"))
+             {
+            <!-- Nav Item - Categorias Collapse Menu -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategorias">
+                        <i class="fas fa-fw fa-layer-group"></i>
+                        <span>Categorias</span>
+                    </a>
+                    <div id="collapseCategorias" class="collapse" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="@Url.Action("Index","Categoria")">Registro Categorias</a>
+                        </div>
+                    </div>
+                </li>
+             }
+            <!-- Nav Item - Venta Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseVenta">
+                    <i class="fas fa-fw fa-tags"></i>
+                    <span>Procesos Judiciales</span>
+                </a>
+                <div id="collapseVenta" class="collapse" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("Index","Proceso")">Registro de Procesos</a>
+                        @* <a class="collapse-item" href="@Url.Action("HistorialProcesos","Proceso")">Historial de Procesos</a> *@
+                        @* <a class="collapse-item" href="@Url.Action("NuevoProceso","Proceso")">Nuevo Proceso</a>
+                        <a class="collapse-item" href="@Url.Action("HistorialProcesos","Proceso")">Historial de Procesos</a> *@
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Reportes Collapse Menu -->
+            @* <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReportes">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Reportes</span>
+                </a>
+                <div id="collapseReportes" class="collapse" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="reporte_venta.html">Reporte de Ventas</a>
+                    </div>
+                </div>
+            </li> *@
+
+            <!-- Divider -->
+            <!-- Sidebar Toggler (Sidebar) -->
+            <li class="text-center">
+                <div class="d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
+            </li>
+            
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <li><div class="topbar-divider d-none d-sm-block"></div></li>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="mr-2 d-none d-lg-flex flex-column align-items-end">
+                                    <span class="text-gray-700 small font-weight-bold">@nombreUsuario</span>
+                                    <span class="text-gray-500" style="font-size:.72rem;">@rolUsuario</span>
+                                </div>
+                                <div class="img-profile rounded-circle d-flex align-items-center justify-content-center" style="width:2rem;height:2rem;background:linear-gradient(135deg,#16345e,#1e4a7a);color:#e3c96b;font-weight:700;font-size:.8rem;">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="@Url.Action("Perfil","Home")">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Perfil
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" asp-area="" asp-controller="Acceso" asp-action="Salir">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Salir
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Estudio Jurídico Zúñiga @DateTime.Now.Year &middot; Sistema de Administración Documental</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="~/js/sb-admin-2.js"></script>
+    <script src="~/vendor/toastr/toastr.min.js"></script>
+    <script src="~/vendor/sweetalert/sweetalert.js"></script>
+    <script src="~/vendor/loadingoverlay/loadingoverlay.min.js"></script>
+    <script>
+        let timeout;
+
+        function resetTimeout() {
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                window.location.href = '/Acceso/Salir';
+            }, 20 * 60 * 1000); // 2 minutos
+        }
+
+        window.addEventListener('load', resetTimeout);
+        document.addEventListener('mousemove', resetTimeout);
+        document.addEventListener('keydown', resetTimeout);
+        document.addEventListener('click', resetTimeout);
+        document.addEventListener('scroll', resetTimeout, { passive: true });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+@* @RenderBody()
+@await RenderSectionAsync("Scripts", required: false) *@

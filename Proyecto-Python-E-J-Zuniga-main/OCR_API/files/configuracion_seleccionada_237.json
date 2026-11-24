@@ -1,0 +1,32 @@
+{
+    "etapa": "C3_seleccion_configuracion",
+    "criterio": "f1_macro",
+    "regla_desempate": [
+        "Mayor mean F1 macro de validación cruzada.",
+        "Si la diferencia es menor a 0.001, menor desviación estándar.",
+        "Si continúa el empate, configuración más simple."
+    ],
+    "epsilon_empate": 0.001,
+    "max_features": 5000,
+    "ngram_range": [
+        1,
+        2
+    ],
+    "min_df": 2,
+    "alpha": 1.0,
+    "cv_f1_macro_media": 0.9468142120197705,
+    "cv_f1_macro_std": 0.037304644052634055,
+    "cv_train_f1_macro_media": 1.0,
+    "cv_train_f1_macro_std": 0.0,
+    "rank_test_score_original": 1,
+    "mejor_f1_macro_observado": 0.9468142120197705,
+    "configuraciones_evaluadas": 48,
+    "ajustes_totales": 240,
+    "candidatos_en_empate_tecnico": 2,
+    "baseline_control": {
+        "incluido_en_grid": true,
+        "f1_macro_baseline_script": 0.9041168225267153,
+        "f1_macro_baseline_grid": 0.9041168225267153,
+        "diferencia_absoluta": 0.0
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "etapa": "C1_baseline",
+    "dataset": "C:\\Users\\Miguel Angel\\Documents\\PFU\\PFU\\PFPYEstudioJuridico\\OCR_API\\files\\dataset_237_train.csv",
+    "hash_train": "a17347c1a51b2fc67875381572c8a093a161b8e3bf0570705eafc339d42b9eb1",
+    "total_train": 189,
+    "train_civil": 90,
+    "train_penal": 99,
+    "semilla": 42,
+    "n_folds": 5,
+    "validacion_cruzada": {
+        "estrategia": "StratifiedKFold",
+        "shuffle": true,
+        "metodo_f1_macro": "cross_val_score",
+        "metodo_metricas_complementarias": "cross_validate"
+    },
+    "pipeline": {
+        "vectorizador": {
+            "tipo": "CountVectorizer",
+            "lowercase": true,
+            "max_features": null,
+            "ngram_range": [
+                1,
+                1
+            ],
+            "min_df": 1,
+            "stop_words": null
+        },
+        "clasificador": {
+            "tipo": "MultinomialNB",
+            "alpha": 1.0
+        }
+    },
+    "metricas": {
+        "accuracy_media": 0.9046941678520625,
+        "accuracy_std": 0.030279847734577495,
+        "precision_macro_media": 0.9085613861729425,
+        "precision_macro_std": 0.032163113158218765,
+        "recall_macro_media": 0.9033625730994153,
+        "recall_macro_std": 0.029670259314927696,
+        "f1_macro_media": 0.9041168225267153,
+        "f1_macro_std": 0.03017993585127762
+    },
+    "versiones": {
+        "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "scikit_learn": "1.7.2",
+        "pandas": "2.2.3"
+    }
+}

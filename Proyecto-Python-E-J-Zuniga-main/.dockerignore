@@ -1,0 +1,16 @@
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+.env
+.venv/
+venv/
+.git/
+.gitignore
+Dockerfile
+*.md
+OCR_API/docs/test.docx
+secrets/*.pem
+secrets/*.key
+
